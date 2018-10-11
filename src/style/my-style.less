@@ -260,3 +260,52 @@ table {
     text-align: right;
   }
 }
+
+.custom-dialog {
+  .el-dialog__header {
+    height: 40px;
+    padding: 0 0 0 20px;
+    line-height: 40px;
+    background-color: #00a499;
+    .el-dialog__title {
+      font-size: 14px;
+      color: #fff;
+    }
+    .el-dialog__headerbtn {
+      top: 8px;
+      right: 18px;
+      .el-dialog__close {
+        font-size: 16px;
+        color: #fff;
+      }
+    }
+  }
+  .el-dialog__body {
+    padding: 46px 130px 84px 130px;
+    .detail-item {
+      padding: 14px 0 16px 0;
+      border-bottom: 1px solid #e4e7ed;
+      font-size: 14px;
+      .item-title {
+        color: #00a499;
+        line-height: 34px;
+      }
+      .item-info {
+        color: #666;
+        line-height: 30px;
+        .info-title {
+          width: 18%;
+        }
+        .info-content {
+          width: 82%;
+        }
+      }
+      
+    }
+  }
+  .el-loading-mask.is-fullscreen {
+    .el-icon-loading {
+      font-size: 36px;
+    }
+  }
+}

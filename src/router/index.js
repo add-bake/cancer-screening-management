@@ -17,6 +17,7 @@ import SystemUser from '@/page/SystemUser'
 import SystemCharacter from '@/page/SystemCharacter'
 import SystemDict from '@/page/SystemDict'
 import AppIndex from '@/page/AppIndex'
+import MedicalReport from '@/page/MedicalReport'
 
 Vue.use(Router)
 
@@ -40,7 +41,8 @@ export default new Router({
         {path: '/finance/settlement_detail', component: FinanceSettlementDetail},
         {path: '/system/user', component: SystemUser},
         {path: '/system/character', component: SystemCharacter},
-        {path: '/system/dict', component: SystemDict}
+        {path: '/system/dict', component: SystemDict},
+        {path: '/medicalReport', component: MedicalReport}
       ]
     },
     {path: '/login', component: Login}

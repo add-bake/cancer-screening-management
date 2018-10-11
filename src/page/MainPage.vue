@@ -7,7 +7,7 @@
         view-class="view-box"
         class="scroll-box"
       >
-        <el-menu router>
+        <el-menu router :default-active="currentPage">
           <el-submenu index="1">
             <template slot="title"><i class="menu-icon icon01"></i>预约</template>
             <el-menu-item-group>
@@ -72,14 +72,12 @@
 
 <script>
 export default {
+  created() {
+    this.currentPage = this.$route.fullPath
+  },
   data() {
-    const item = {
-      date: '2016-05-02',
-      name: '王小虎',
-      address: '上海市普陀区金沙江路 1518 弄'
-    };
     return {
-      tableData: Array(20).fill(item),
+      currentPage: '', //当前页面路由
       clientHeight: ''
     }
   },
@@ -91,9 +89,7 @@ export default {
   },
   methods:{
     changeFixed(clientHeight){
-      console.log(clientHeight);
       this.$refs.mainPage.style.height = clientHeight+'px';
-
     },
   }
 }
