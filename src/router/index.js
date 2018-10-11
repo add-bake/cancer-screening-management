@@ -8,10 +8,12 @@ Vue.use(Router)
 
 export default new Router({
   routes: [
-    {path: '/', component: MainPage,
-    children: [
-      {path: '/bookingManagement', component: BookingManagement}
-    ]
+    {
+      path: '/',
+      component: MainPage,
+      children: [
+        {path: '/bookingManagement', component: BookingManagement}
+      ]
     },
     {path: '/login', component: Login}
   ]
