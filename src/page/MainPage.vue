@@ -8,37 +8,37 @@
           <el-menu-item-group>
             <!-- <template slot="title">分组一</template> -->
             <el-menu-item index="/booking/management">· 预约管理</el-menu-item>
-            <el-menu-item index="1-2">· 体检报告</el-menu-item>
+            <el-menu-item index="/booking/report">· 体检报告</el-menu-item>
           </el-menu-item-group>
         </el-submenu>
         <el-submenu index="2">
           <template slot="title"><i class="menu-icon icon02"></i>运营</template>
           <el-menu-item-group>
             <!-- <template slot="title">分组一</template> -->
-            <el-menu-item index="2-1">· 体检项目</el-menu-item>
-            <el-menu-item index="2-2">· 健康知识</el-menu-item>
-            <el-menu-item index="2-3">· 癌症保险</el-menu-item>
-            <el-menu-item index="2-4">· 客户管理</el-menu-item>
-            <el-menu-item index="2-5">· 帮助中心</el-menu-item>
-            <el-menu-item index="2-6">· 合作机构</el-menu-item>
+            <el-menu-item index="/operation/project">· 体检项目</el-menu-item>
+            <el-menu-item index="/operation/knowledge">· 健康知识</el-menu-item>
+            <el-menu-item index="/operation/insurance">· 癌症保险</el-menu-item>
+            <el-menu-item index="/operation/customer">· 客户管理</el-menu-item>
+            <el-menu-item index="/operation/help">· 帮助中心</el-menu-item>
+            <el-menu-item index="/operation/cooperation">· 合作机构</el-menu-item>
           </el-menu-item-group>
         </el-submenu>
         <el-submenu index="3">
           <template slot="title"><i class="menu-icon icon03"></i>财务</template>
           <el-menu-item-group>
             <!-- <template slot="title">分组一</template> -->
-            <el-menu-item index="3-1">· 佣金发放</el-menu-item>
-            <el-menu-item index="3-2">· 财务结算</el-menu-item>
-            <el-menu-item index="3-3">· 结算明细</el-menu-item>
+            <el-menu-item index="/finance/salary">· 佣金发放</el-menu-item>
+            <el-menu-item index="/finance/settlement">· 财务结算</el-menu-item>
+            <el-menu-item index="/finance/settlement_detail">· 结算明细</el-menu-item>
           </el-menu-item-group>
         </el-submenu>
         <el-submenu index="4">
           <template slot="title"><i class="menu-icon icon04"></i>系统</template>
           <el-menu-item-group>
             <!-- <template slot="title">分组一</template> -->
-            <el-menu-item index="4-1">· 用户管理</el-menu-item>
-            <el-menu-item index="4-2">· 角色管理</el-menu-item>
-            <el-menu-item index="4-3">· 数据字典</el-menu-item>
+            <el-menu-item index="/system/user">· 用户管理</el-menu-item>
+            <el-menu-item index="/system/character">· 角色管理</el-menu-item>
+            <el-menu-item index="/system/dict">· 数据字典</el-menu-item>
           </el-menu-item-group>
         </el-submenu>
       </el-menu>
