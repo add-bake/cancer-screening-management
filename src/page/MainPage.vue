@@ -2,46 +2,52 @@
   <el-container class="main-page" ref="mainPage" :style="{height: clientHeight+'px'}">
     <el-aside class="menu" style="width: 220px;">
       <p class="system-name l" @click="$router.push('/')">健康天眼管理系统</p>
-      <el-menu router>
-        <el-submenu index="1">
-          <template slot="title"><i class="menu-icon icon01"></i>预约</template>
-          <el-menu-item-group>
-            <!-- <template slot="title">分组一</template> -->
-            <el-menu-item index="/booking/management">· 预约管理</el-menu-item>
-            <el-menu-item index="/booking/report">· 体检报告</el-menu-item>
-          </el-menu-item-group>
-        </el-submenu>
-        <el-submenu index="2">
-          <template slot="title"><i class="menu-icon icon02"></i>运营</template>
-          <el-menu-item-group>
-            <!-- <template slot="title">分组一</template> -->
-            <el-menu-item index="/operation/project">· 体检项目</el-menu-item>
-            <el-menu-item index="/operation/knowledge">· 健康知识</el-menu-item>
-            <el-menu-item index="/operation/insurance">· 癌症保险</el-menu-item>
-            <el-menu-item index="/operation/customer">· 客户管理</el-menu-item>
-            <el-menu-item index="/operation/help">· 帮助中心</el-menu-item>
-            <el-menu-item index="/operation/cooperation">· 合作机构</el-menu-item>
-          </el-menu-item-group>
-        </el-submenu>
-        <el-submenu index="3">
-          <template slot="title"><i class="menu-icon icon03"></i>财务</template>
-          <el-menu-item-group>
-            <!-- <template slot="title">分组一</template> -->
-            <el-menu-item index="/finance/salary">· 佣金发放</el-menu-item>
-            <el-menu-item index="/finance/settlement">· 财务结算</el-menu-item>
-            <el-menu-item index="/finance/settlement_detail">· 结算明细</el-menu-item>
-          </el-menu-item-group>
-        </el-submenu>
-        <el-submenu index="4">
-          <template slot="title"><i class="menu-icon icon04"></i>系统</template>
-          <el-menu-item-group>
-            <!-- <template slot="title">分组一</template> -->
-            <el-menu-item index="/system/user">· 用户管理</el-menu-item>
-            <el-menu-item index="/system/character">· 角色管理</el-menu-item>
-            <el-menu-item index="/system/dict">· 数据字典</el-menu-item>
-          </el-menu-item-group>
-        </el-submenu>
-      </el-menu>
+      <el-scrollbar
+        :native="false"
+        view-class="view-box"
+        class="scroll-box"
+      >
+        <el-menu router>
+          <el-submenu index="1">
+            <template slot="title"><i class="menu-icon icon01"></i>预约</template>
+            <el-menu-item-group>
+              <!-- <template slot="title">分组一</template> -->
+              <el-menu-item index="/booking/management">· 预约管理</el-menu-item>
+              <el-menu-item index="/booking/report">· 体检报告</el-menu-item>
+            </el-menu-item-group>
+          </el-submenu>
+          <el-submenu index="2">
+            <template slot="title"><i class="menu-icon icon02"></i>运营</template>
+            <el-menu-item-group>
+              <!-- <template slot="title">分组一</template> -->
+              <el-menu-item index="/operation/project">· 体检项目</el-menu-item>
+              <el-menu-item index="/operation/knowledge">· 健康知识</el-menu-item>
+              <el-menu-item index="/operation/insurance">· 癌症保险</el-menu-item>
+              <el-menu-item index="/operation/customer">· 客户管理</el-menu-item>
+              <el-menu-item index="/operation/help">· 帮助中心</el-menu-item>
+              <el-menu-item index="/operation/cooperation">· 合作机构</el-menu-item>
+            </el-menu-item-group>
+          </el-submenu>
+          <el-submenu index="3">
+            <template slot="title"><i class="menu-icon icon03"></i>财务</template>
+            <el-menu-item-group>
+              <!-- <template slot="title">分组一</template> -->
+              <el-menu-item index="/finance/salary">· 佣金发放</el-menu-item>
+              <el-menu-item index="/finance/settlement">· 财务结算</el-menu-item>
+              <el-menu-item index="/finance/settlement_detail">· 结算明细</el-menu-item>
+            </el-menu-item-group>
+          </el-submenu>
+          <el-submenu index="4">
+            <template slot="title"><i class="menu-icon icon04"></i>系统</template>
+            <el-menu-item-group>
+              <!-- <template slot="title">分组一</template> -->
+              <el-menu-item index="/system/user">· 用户管理</el-menu-item>
+              <el-menu-item index="/system/character">· 角色管理</el-menu-item>
+              <el-menu-item index="/system/dict">· 数据字典</el-menu-item>
+            </el-menu-item-group>
+          </el-submenu>
+        </el-menu>
+      </el-scrollbar>
     </el-aside>
 
     <el-container>
@@ -97,7 +103,6 @@ export default {
 .main-page {
   height: 500px;
   .menu {
-    background: linear-gradient(#1ebdb4, #887df2);
     .system-name {
       width: 100%;
       height: 60px;
@@ -214,4 +219,17 @@ export default {
     background-color: #f0f3f5;
   }
 }
+/* hack to remove the horizontal scrollbar */
+.el-scrollbar__wrap {
+  overflow-x: hidden;
+}
 </style>
+
+<style scoped>
+.scroll-box {
+  height: calc(100vh - 60px);
+  width: 100%;
+  background: linear-gradient(#1ebdb4, #887df2);
+}
+</style>
+
