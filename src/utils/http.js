@@ -1,5 +1,5 @@
 import axios from 'axios'
-import qs from 'qs'
+import { Message } from 'element-ui'
 
 axios.defaults.baseURL = 'http://192.168.0.79:8080/api'
 axios.interceptors.request.use(config => {
@@ -14,7 +14,7 @@ axios.interceptors.response.use(response => {
   return Promise.resolve(error.response)
 })
 
-function checkStatus (response) {
+let checkStatus = response => {
   // 如果http状态码正常，则直接返回数据
   if (response && (response.status === 200 || response.status === 304 || response.status === 400)) {
     return response.data
@@ -30,10 +30,10 @@ function checkStatus (response) {
 function checkCode (res) {
   // 如果code异常(这里已经包括网络错误，服务器错误，后端抛出的错误)，可以弹出一个错误提示，告诉用户
   if (res.status === -404) {
-    console.log(res.msg)
+    Message(res.msg)
   }
   if (res.data && (!res.data.status === 'success')) {
-    console.log(res.data.error_msg)
+    Message(res.data.error_msg)
   }
   return res
 }
