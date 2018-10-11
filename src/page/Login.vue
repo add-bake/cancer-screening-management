@@ -23,7 +23,7 @@
 export default {
   data () {
     return {
-      
+
     }
   }
 }
@@ -40,7 +40,7 @@ body,
   width: 100%;
   height: 100%;
   background: #fff url("../assets/login_bg.jpg") center center no-repeat;
-  background-size: 1920px 948px;
+  background-size: cover;
   .wrap {
     height: 100%;
   }
