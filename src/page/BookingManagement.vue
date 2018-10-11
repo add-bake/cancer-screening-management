@@ -8,7 +8,7 @@
     <div class="screen-box">
       <div class="title-bar fix">
         筛选查询
-        <el-button class="r" @click="onSubmit">查询结果</el-button>
+        <el-button class="r" @click="getData">查询结果</el-button>
         <el-button type="text" class="r" @click="screenControl">{{screenShow ? '收起' : '展开'}}筛选</el-button>
       </div>
       <el-form :inline="true" :model="screenData" class="demo-form-inline" v-show="screenShow">
@@ -27,6 +27,7 @@
       </div>
       <el-table
         :data="tableData"
+        v-loading="loading"
         border
         style="width: 100%">
         <el-table-column
@@ -35,42 +36,63 @@
           width="55">
         </el-table-column>
         <el-table-column
-          prop="date"
-          label="日期"
+          prop="name"
+          label="姓名"
+          width="80">
+        </el-table-column>
+        <el-table-column
+          prop="sex"
+          label="性别"
+          width="80"
+          :formatter="sexHandle">
+        </el-table-column>
+        <el-table-column
+          prop="phone"
+          label="手机号"
+          width="120">
+        </el-table-column>
+        <el-table-column
+          prop="appointmentDate"
+          label="预约时间"
+          width="165">
+        </el-table-column>
+        <el-table-column
+          prop="checkAmount"
+          label="体检费用"
+          width="100">
+        </el-table-column>
+        <el-table-column
+          prop="orgName"
+          label="合作机构"
           width="150">
         </el-table-column>
         <el-table-column
-          prop="name"
-          label="姓名"
-          width="120">
+          prop="remark"
+          label="备注"
+          width="150">
         </el-table-column>
         <el-table-column
-          prop="province"
-          label="省份"
-          width="120">
+          prop="shareName"
+          label="分享者"
+          width="80">
         </el-table-column>
         <el-table-column
-          prop="city"
-          label="市区"
-          width="120">
+          prop="state"
+          label="状态"
+          width="150"
+          :formatter="statusHandle">
         </el-table-column>
         <el-table-column
-          prop="address"
-          label="地址"
-          width="300">
-        </el-table-column>
-        <el-table-column
-          prop="zip"
-          label="邮编"
-          width="120">
+          prop="createTime"
+          label="创建时间"
+          width="165">
         </el-table-column>
         <el-table-column
           fixed="right"
           label="操作"
           width="100">
           <template slot-scope="scope">
-            <el-button @click="handleClick(scope.row)" type="text" size="small">查看</el-button>
-            <el-button type="text" size="small">编辑</el-button>
+            <el-button @click="openDetail(scope.row)" type="text" size="small">查看详情</el-button>
           </template>
         </el-table-column>
       </el-table>
@@ -90,9 +112,12 @@
 <script>
 import http from '../utils/http.js'
 import api from '../utils/api.js'
-import qs from 'qs'
+import { mapState } from 'vuex'
 
 export default {
+  computed: {
+    ...mapState(['orderStatus'])
+  },
   created() {
     this.getData()
   },
@@ -108,60 +133,40 @@ export default {
       },
       totalPage: 0,
       screenShow: true,
-      tableData: [{
-        date: '2016-05-03',
-        name: '王小虎',
-        province: '上海',
-        city: '普陀区',
-        address: '上海市普陀区金沙江路 1518 弄',
-        zip: 200333
-      }, {
-        date: '2016-05-02',
-        name: '王小虎',
-        province: '上海',
-        city: '普陀区',
-        address: '上海市普陀区金沙江路 1518 弄',
-        zip: 200333
-      }, {
-        date: '2016-05-04',
-        name: '王小虎',
-        province: '上海',
-        city: '普陀区',
-        address: '上海市普陀区金沙江路 1518 弄',
-        zip: 200333
-      }, {
-        date: '2016-05-01',
-        name: '王小虎',
-        province: '上海',
-        city: '普陀区',
-        address: '上海市普陀区金沙江路 1518 弄',
-        zip: 200333
-      }]
+      tableData: [],
+      loading: false
     }
   },
   methods: {
     async getData() {
+      this.loading = true
       let res = await http.post({
         param: this.screenData,
         page: this.page
       },api.getOrder)
-      console.log(res)
+      this.loading = false
+      this.tableData = res.data
       this.totalPage = res.page.total
     },
-    onSubmit() {
-      console.log('submit!');
+    sexHandle(val) {
+      return val.sex ? '男' : '女'
+    },
+    statusHandle(val) {
+      return this.orderStatus[val.state]
     },
     screenControl() {
       this.screenShow = !this.screenShow
     },
-    handleClick(row) {
+    openDetail(row) {
       this.$message('这是一条消息提示');
     },
-    handleSizeChange() {
-      console.log('handleSizeChange')
+    handleSizeChange(arg) {
+      this.page.pageSize = arg
+      this.getData()
     },
-    handleCurrentChange() {
-      console.log('handleCurrentChange')
+    handleCurrentChange(arg) {
+      this.page.pageNum = arg
+      this.getData()
     }
   }
 }
