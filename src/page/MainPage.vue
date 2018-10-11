@@ -7,7 +7,7 @@
           <template slot="title"><i class="menu-icon icon01"></i>预约</template>
           <el-menu-item-group>
             <!-- <template slot="title">分组一</template> -->
-            <el-menu-item index="/bookingManagement">· 预约管理</el-menu-item>
+            <el-menu-item index="/booking/management">· 预约管理</el-menu-item>
             <el-menu-item index="1-2">· 体检报告</el-menu-item>
           </el-menu-item-group>
         </el-submenu>
@@ -43,7 +43,7 @@
         </el-submenu>
       </el-menu>
     </el-aside>
-    
+
     <el-container>
       <el-header class="fix">
         <p class="login-info l">这是您第 23323 次登录，上次登录日期：2018：05：20 08：39</p>
@@ -56,7 +56,7 @@
           <button class="btn-logout l"></button>
         </div>
       </el-header>
-      
+
       <el-main>
         <router-view></router-view>
       </el-main>
