@@ -1,7 +1,7 @@
 <template>
   <el-container class="main-page" ref="mainPage" :style="{height: clientHeight+'px'}">
     <el-aside class="menu" style="width: 220px;">
-      <p class="system-name l">健康天眼管理系统</p>
+      <p class="system-name l" @click="$router.push('/')">健康天眼管理系统</p>
       <el-menu router>
         <el-submenu index="1">
           <template slot="title"><i class="menu-icon icon01"></i>预约</template>
@@ -107,6 +107,7 @@ export default {
       line-height: 60px;
       text-align: center;
       background-color: #00a499;
+      cursor: pointer;
     }
     .menu-icon {
       display: inline-block;

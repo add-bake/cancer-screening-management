@@ -16,6 +16,7 @@ import FinanceSettlementDetail from '@/page/FinanceSettlementDetail'
 import SystemUser from '@/page/SystemUser'
 import SystemCharacter from '@/page/SystemCharacter'
 import SystemDict from '@/page/SystemDict'
+import AppIndex from '@/page/AppIndex'
 
 Vue.use(Router)
 
@@ -25,6 +26,7 @@ export default new Router({
       path: '/',
       component: MainPage,
       children: [
+        {path: '', component: AppIndex},
         {path: '/booking/management', component: BookingManagement},
         {path: '/booking/report', component: BookingReport},
         {path: '/operation/project', component: OperationProject},
