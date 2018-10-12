@@ -28,13 +28,12 @@
       <el-table
         :data="tableData"
         v-loading="loading"
-        border
-        style="width: 100%">
+        style="width: 100%"
+      >
         <el-table-column
           fixed
           type="selection"
-          width="55">
-        </el-table-column>
+        ></el-table-column>
         <el-table-column
           prop="name"
           label="姓名"
@@ -43,7 +42,7 @@
         <el-table-column
           prop="sex"
           label="性别"
-          width="80"
+          width="50"
           :formatter="sexHandle">
         </el-table-column>
         <el-table-column
@@ -54,43 +53,35 @@
         <el-table-column
           prop="appointmentDate"
           label="预约时间"
-          width="165">
-        </el-table-column>
+        ></el-table-column>
         <el-table-column
           prop="checkAmount"
-          label="体检费用"
-          width="100">
+          label="体检费用">
         </el-table-column>
         <el-table-column
           prop="orgName"
-          label="合作机构"
-          width="150">
+          label="合作机构">
         </el-table-column>
         <el-table-column
           prop="remark"
-          label="备注"
-          width="150">
+          label="备注">
         </el-table-column>
         <el-table-column
           prop="shareName"
-          label="分享者"
-          width="80">
+          label="分享者">
         </el-table-column>
         <el-table-column
           prop="state"
           label="状态"
-          width="150"
           :formatter="statusHandle">
         </el-table-column>
         <el-table-column
           prop="createTime"
-          label="创建时间"
-          width="165">
+          label="创建时间">
         </el-table-column>
         <el-table-column
           fixed="right"
-          label="操作"
-          width="100">
+          label="操作">
           <template slot-scope="scope">
             <el-button @click="openDetail(scope.row)" type="text" size="small">查看详情</el-button>
           </template>
