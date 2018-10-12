@@ -1,7 +1,7 @@
 import axios from 'axios'
 import { Message } from 'element-ui'
 
-axios.defaults.baseURL = 'http://192.168.0.79:8080/api'
+axios.defaults.baseURL = process.env.API_ROOT
 axios.interceptors.request.use(config => {
   return config
 }, error => {
