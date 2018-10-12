@@ -217,12 +217,9 @@ export default {
       }
     }
   }
-  .el-main {
-    background-color: #f0f3f5;
-  }
 }
 /* hack to remove the horizontal scrollbar */
-.el-scrollbar__wrap {
+.scroll-box .el-scrollbar__wrap, .main-box .el-scrollbar__wrap {
   overflow-x: auto;
 }
 </style>
@@ -231,6 +228,9 @@ export default {
 .scroll-box, .main-box {
   height: calc(100vh - 60px);
   width: 100%;
+}
+.main-box {
+  background-color: #f0f3f5;
 }
 .scroll-box {
   background: linear-gradient(#1ebdb4, #887df2);

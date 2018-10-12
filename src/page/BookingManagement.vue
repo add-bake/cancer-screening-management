@@ -11,7 +11,7 @@
         <el-button class="r" @click="screenSubmit">查询结果</el-button>
         <el-button type="text" class="r" @click="screenControl">{{screenShow ? '收起' : '展开'}}筛选</el-button>
       </div>
-      <el-form :inline="true" :model="screenData" class="demo-form-inline" v-show="screenShow">
+      <el-form size="small" :inline="true" :model="screenData" class="demo-form-inline" v-show="screenShow">
         <el-form-item label="姓名：">
           <el-input v-model="screenData.userName" placeholder="姓名"></el-input>
         </el-form-item>
@@ -53,6 +53,7 @@
         <el-table-column
           prop="appointmentDate"
           label="预约时间"
+          width="160"
         ></el-table-column>
         <el-table-column
           prop="checkAmount"
@@ -77,7 +78,8 @@
         </el-table-column>
         <el-table-column
           prop="createTime"
-          label="创建时间">
+          label="创建时间"
+          width="160">
         </el-table-column>
         <el-table-column
           fixed="right"
@@ -163,7 +165,7 @@ export default {
         region: '',
       },
       page: {
-        pageSize: 15,
+        pageSize: 10,
         pageNum: 1
       },
       totalPage: 0,
