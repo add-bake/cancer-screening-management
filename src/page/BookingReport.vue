@@ -11,7 +11,7 @@
         <el-button class="r" @click="screenSubmit">查询结果</el-button>
         <el-button type="text" class="r" @click="screenShow = !screenShow">{{screenShow ? '收起' : '展开'}}筛选</el-button>
       </div>
-      <el-form :inline="true" :model="screenData" class="demo-form-inline" v-show="screenShow" ref="screenForm" :rules="rules">
+      <el-form size="small" :inline="true" :model="screenData" class="demo-form-inline" v-show="screenShow" ref="screenForm" :rules="rules">
         <el-form-item label="姓名：" prop="userName">
           <el-input type="text" v-model="screenData.userName" placeholder="姓名" autocomplete="off"></el-input>
         </el-form-item>
@@ -25,24 +25,24 @@
         数据列表
         <el-button class="r">导出信息</el-button>
       </div>
-      <el-table :data="tableData" v-loading="loading" border style="width: 100%">
+      <el-table :data="tableData" v-loading="loading" style="width: 100%">
         <el-table-column fixed type="selection" width="55">
         </el-table-column>
         <el-table-column prop="name" label="姓名" width="80">
         </el-table-column>
-        <el-table-column prop="sex" label="性别" width="80" :formatter="sexHandle">
+        <el-table-column prop="sex" label="性别" width="50" :formatter="sexHandle">
         </el-table-column>
         <el-table-column prop="phone" label="手机号" width="120">
         </el-table-column>
-        <el-table-column prop="appointmentDate" label="预约时间" width="165">
+        <el-table-column prop="appointmentDate" label="预约时间">
         </el-table-column>
-        <el-table-column prop="remark" label="备注" width="150">
+        <el-table-column prop="remark" label="备注">
         </el-table-column>
-        <el-table-column prop="state" label="状态" width="150" :formatter="statusHandle">
+        <el-table-column prop="state" label="状态" :formatter="statusHandle">
         </el-table-column>
-        <el-table-column prop="createTime" label="创建时间" width="165">
+        <el-table-column prop="createTime" label="创建时间">
         </el-table-column>
-        <el-table-column fixed="right" label="操作" width="100">
+        <el-table-column fixed="right" label="操作">
           <template slot-scope="scope">
             <el-button @click="uploadReport(scope.row)" type="text" size="small">{{scope.row.state == '1' ? '上传报告' : '查看详情'}}</el-button>
           </template>
@@ -149,7 +149,7 @@ export default {
         phone: ""
       },
       page: {
-        pageSize: 15,
+        pageSize: 10,
         pageNum: 1
       },
       totalPage: 0,
@@ -170,8 +170,7 @@ export default {
   methods: {
     async getData() {
       this.loading = true;
-      let res = await http.post(
-        api.getMedicalReport,
+      let res = await http.post(api.getMedicalReport,
         {
           param: this.screenData,
           page: this.page

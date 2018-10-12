@@ -11,7 +11,7 @@
         <el-button class="r" @click="screenSubmit">查询结果</el-button>
         <el-button type="text" class="r" @click="screenShow = !screenShow">{{screenShow ? '收起' : '展开'}}筛选</el-button>
       </div>
-      <el-form :inline="true" :model="screenData" class="demo-form-inline" v-show="screenShow">
+      <el-form size="small" :inline="true" :model="screenData" class="demo-form-inline" v-show="screenShow">
         <el-form-item label="项目名称：">
           <el-input v-model="screenData.projectName" placeholder="项目名称"></el-input>
         </el-form-item>
@@ -25,7 +25,6 @@
       <el-table
         :data="tableData"
         v-loading="loading"
-        border
         style="width: 100%">
         <el-table-column
           fixed
@@ -69,38 +68,38 @@
     </div>
     <!-- 详情弹出框 -->
     <el-dialog title="预约详情" width="760px" custom-class="custom-dialog" size="small" :visible.sync="customDialogVisible">
-      <el-form ref="form" :model="form" label-width="80px">
-        <el-form-item label="项目名称">
+      <el-form ref="form" :model="form" label-width="94px" :rules="rules">
+        <el-form-item label="项目名称：" prop="projectName">
           <el-input v-model="form.projectName"></el-input>
         </el-form-item>
-        <el-form-item label="项目价格">
+        <el-form-item label="项目价格：" prop="amount">
           <el-input v-model.number="form.amount"></el-input>
         </el-form-item>
-        <el-form-item label="项目描述">
+        <el-form-item label="项目描述：" prop="projectDescription">
           <el-input v-model="form.projectDescription"></el-input>
         </el-form-item>
-        <el-form-item label="项目编码">
+        <el-form-item label="项目编码：" prop="projectCode">
           <el-input v-model="form.projectCode"></el-input>
         </el-form-item>
-        <el-form-item label="机构代码">
+        <el-form-item label="机构代码：" prop="orgCode">
           <el-input v-model="form.orgCode"></el-input>
         </el-form-item>
-        <el-form-item label="个人佣金">
+        <el-form-item label="个人佣金：" prop="selfBkge">
           <el-input v-model="form.selfBkge"></el-input>
         </el-form-item>
-        <el-form-item label="上级佣金">
+        <el-form-item label="上级佣金：" prop="oneBkge">
           <el-input v-model="form.oneBkge"></el-input>
         </el-form-item>
-        <el-form-item label="机构佣金">
+        <el-form-item label="机构佣金：" prop="orgBkge">
           <el-input v-model="form.orgBkge"></el-input>
         </el-form-item>
-        <el-form-item label="设备佣金">
+        <el-form-item label="设备佣金：" prop="deviceBkge">
           <el-input v-model="form.deviceBkge"></el-input>
         </el-form-item>
-        <el-form-item label="封面图">
+        <el-form-item label="封面图：" prop="projectImg">
           <el-input v-model="form.projectImg"></el-input>
         </el-form-item>
-        <el-form-item label="项目介绍">
+        <el-form-item label="项目介绍：" prop="content">
           <el-input v-model="form.content"></el-input>
         </el-form-item>
         <el-form-item>
@@ -126,7 +125,7 @@ export default {
         projectName: ''
       },
       page: {
-        pageSize: 15,
+        pageSize: 10,
         pageNum: 1
       },
       form: {
@@ -163,8 +162,20 @@ export default {
         ],
         selfBkge: [
           { required: true, message: '请输入个人佣金', trigger: 'blur' },
-          { type: 'number', message: '项目价格必须为数字', trigger: 'blur' },
+          { type: 'number', message: '个人佣金必须为数字', trigger: 'blur' }
         ],
+        oneBkge: [
+          { required: true, message: '请输入上级佣金', trigger: 'blur' },
+          { type: 'number', message: '上级佣金必须为数字', trigger: 'blur' }
+        ],
+        orgBkge: [
+          { required: true, message: '请输入机构佣金', trigger: 'blur' },
+          { type: 'number', message: '机构佣金必须为数字', trigger: 'blur' }
+        ],
+        deviceBkge: [
+          { required: true, message: '请输入设备佣金', trigger: 'blur' },
+          { type: 'number', message: '设备佣金必须为数字', trigger: 'blur' }
+        ]
       },
       totalPage: 0,
       screenShow: true,
@@ -186,7 +197,13 @@ export default {
       this.totalPage = res.page.total
     },
     async onSubmit() {
-
+      this.$refs["form"].validate(valid => {
+        if (valid) {
+          console.log('submit')
+        } else {
+          return false;
+        }
+      });
     },
     screenSubmit() {
       this.page.pageNum = 1
