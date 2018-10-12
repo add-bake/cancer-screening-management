@@ -52,7 +52,7 @@
       </el-pagination>
     </div>
     <!-- 详情弹出框 -->
-    <el-dialog 
+    <el-dialog
       title="体检报告"
       width="760px"
       :custom-class="customClass"
@@ -171,11 +171,11 @@ export default {
     async getData() {
       this.loading = true;
       let res = await http.post(
+        api.getMedicalReport,
         {
           param: this.screenData,
           page: this.page
-        },
-        api.getMedicalReport
+        }
       );
       this.loading = false;
       this.tableData = res.data;
@@ -237,10 +237,10 @@ export default {
         return this.$message.warning("请先上传体检报告");
       }
       this.$ctloading(async () => {
-        let res = await http.post({
-            healthCheckOrderId: this.healthCheckOrderId,
-            checkReportFile: this.fileList[0].response.data
-          },api.reportCommit);
+        let res = await http.post(api.reportCommit, {
+          healthCheckOrderId: this.healthCheckOrderId,
+          checkReportFile: this.fileList[0].response.data
+        });
         if(res.data){
           this.$message.success("上传成功");
           this.detailData.state = 2
@@ -285,5 +285,5 @@ export default {
   .el-dialog__footer {
     text-align: center;
   }
-} 
+}
 </style>

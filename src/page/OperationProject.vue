@@ -177,10 +177,10 @@ export default {
   methods: {
     async getData() {
       this.loading = true
-      let res = await http.post({
+      let res = await http.post(api.getOperationProject, {
         param: this.screenData,
         page: this.page
-      },api.getOperationProject)
+      })
       this.loading = false
       this.tableData = res.data
       this.totalPage = res.page.total
