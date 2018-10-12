@@ -63,9 +63,15 @@
         </div>
       </el-header>
 
-      <el-main>
-        <router-view></router-view>
-      </el-main>
+      <el-scrollbar
+        :native="false"
+        view-class="view-box"
+        class="main-box"
+      >
+        <el-main>
+          <router-view></router-view>
+        </el-main>
+      </el-scrollbar>
     </el-container>
   </el-container>
 </template>
@@ -217,14 +223,16 @@ export default {
 }
 /* hack to remove the horizontal scrollbar */
 .el-scrollbar__wrap {
-  overflow-x: hidden;
+  overflow-x: auto;
 }
 </style>
 
 <style scoped>
-.scroll-box {
+.scroll-box, .main-box {
   height: calc(100vh - 60px);
   width: 100%;
+}
+.scroll-box {
   background: linear-gradient(#1ebdb4, #887df2);
 }
 </style>
