@@ -32,7 +32,7 @@ function checkCode (res) {
   if (res.status === -404) {
     Message(res.msg)
   }
-  if (res.data && (!res.data.status === 'success')) {
+  if (res.data && res.data.status !== 'success') {
     Message(res.data.error_msg)
   }
   return res
