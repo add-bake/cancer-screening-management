@@ -22,6 +22,7 @@
 <script>
 import http from '../utils/http.js'
 import api from '../utils/api.js'
+import session from '../utils/session'
 
 export default {
   data () {
@@ -58,6 +59,7 @@ export default {
         imgCode: this.form.verifycode
       })
       if (res.code !== 0) return this.$message({message: res.msg, type: 'error'})
+      session('role', res.data.role)
       this.$router.replace(this.$route.query.redirect || '/')
     }
   }

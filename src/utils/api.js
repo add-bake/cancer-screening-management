@@ -20,5 +20,6 @@ export default {
   isOrgcodeValid: '/api/project/valid/code',
   addOrg: '/api/org/add',
   updateOrg: '/api/org/update',
-  deleteOrg: '/api/org/delete'
+  deleteOrg: '/api/org/delete',
+  getRegions: '/api/regions/tree' //获取区域树
 }

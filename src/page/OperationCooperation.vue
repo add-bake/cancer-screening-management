@@ -6,14 +6,15 @@
       <el-breadcrumb-item>合作机构</el-breadcrumb-item>
     </el-breadcrumb>
     <div class="screen-box">
-      <div class="title-bar fix">
+      <div class="title-bar">
         筛选查询
-        <el-button class="r" @click="screenSubmit">查询结果</el-button>
-        <el-button type="text" class="r" @click="screenControl">{{screenShow ? '收起' : '展开'}}筛选</el-button>
       </div>
-      <el-form size="small" :inline="true" :model="screenData" class="demo-form-inline" v-show="screenShow">
+      <el-form size="small" :inline="true" :model="screenData" class="demo-form-inline">
         <el-form-item label="机构名称：">
           <el-input v-model="screenData.orgName" placeholder="机构名称"></el-input>
+        </el-form-item>
+        <el-form-item>
+          <el-button @click="screenSubmit">查询</el-button>
         </el-form-item>
       </el-form>
     </div>
@@ -83,6 +84,13 @@
         <el-form-item label="机构编码：" prop="orgCode">
           <el-input v-model="form.orgCode"></el-input>
         </el-form-item>
+        <el-form-item label="所在区域：" prop="choosedRegions">
+          <el-cascader
+            :options="regions"
+            :props="regionProps"
+            v-model="form.choosedRegions"
+          ></el-cascader>
+        </el-form-item>
         <el-form-item label="机构地址：" prop="address">
           <el-input v-model="form.address"></el-input>
         </el-form-item>
@@ -108,6 +116,7 @@ import api from '../utils/api.js'
 export default {
   created() {
     this.getData()
+    this.getRegions()
   },
   data() {
     return {
@@ -119,12 +128,13 @@ export default {
         pageNum: 1
       },
       totalPage: 0,
-      screenShow: true,
       tableData: [],
       loading: false,
       customDialogVisible: false,
       currentOrgId: '',
-      form: {},
+      form: {
+        choosedRegions: []
+      },
       rules: {
         orgName: [
           {required: true, message: '请输入机构名称', trigger: 'blur'}
@@ -133,21 +143,30 @@ export default {
           {required: true, message: '请输入机构编码', trigger: 'blur'},
           {pattern: /^[0-9a-zA-Z]+$/, message: '您只能输入数字字母'}
         ],
+        choosedRegions: [
+          {required: true, message: '请选择所在区域', trigger: 'change'}
+        ],
         address: [
           {required: true, message: '请输入机构地址', trigger: 'blur'},
           {min: '6', message: '请输入至少6个字符', trigger: 'blur'}
         ],
-        linkMan: [
-          {required: true, message: '请输入联系人姓名', trigger: 'blur'}
-        ],
         linkTel: [
-          {required: true, message: '请输入联系人手机号', trigger: 'blur'},
           {pattern: /^1[0-9]{10}$/, message: '请输入正确格式的手机号', trigger: 'blur'}
         ]
+      },
+      regions: [],
+      regionProps: {
+        label: 'regionName',
+        value: 'regionCode',
+        children: 'regions'
       }
     }
   },
   methods: {
+    async getRegions () {
+      let res = await http.get(api.getRegions)
+      this.regions = res.data
+    },
     async getData() {
       this.loading = true
       let res = await http.post(api.getOrgPage, {
@@ -165,10 +184,8 @@ export default {
     emptyHandle(row, column) {
       return row[column.property] || '--'
     },
-    screenControl() {
-      this.screenShow = !this.screenShow
-    },
     openAddDetail () {
+      if (this.$refs.form) this.$refs.form.resetFields()
       this.form = {}
       this.currentOrgId = ''
       this.customDialogVisible = true
@@ -177,18 +194,27 @@ export default {
       this.currentOrgId = row.orgId
       this.$ctloading(async () => {
         let res = await http.get(`${api.getOrgDetail}/${row.orgId}`)
-        this.form = res.data
+        if (this.$refs.form) this.$refs.form.resetFields()
+        let {regionCode, regionName, ...others} = res.data
+        others.choosedRegions = []
+        this.form = others
         this.customDialogVisible = true
       })
     },
-    async deleteDetail (row) {
-      let res = await http.post(`${api.addOrg}/${row.orgId}`)
-      if (res.code === 0) {
-        this.$message('机构删除成功')
-        this.getData()
-      } else {
-        this.$message(res.msg)
-      }
+    deleteDetail (row) {
+      this.$confirm(`确定要删除机构"${row.orgName}"吗?`, '提示', {
+        confirmButtonText: '删除',
+        cancelButtonText: '取消',
+        type: 'warning'
+      }).then(async () => {
+        let res = await http.post(`${api.deleteOrg}/${row.orgId}`)
+        if (res.code === 0) {
+          this.$message('机构删除成功')
+          this.getData()
+        } else {
+          this.$message(res.msg)
+        }
+      })
     },
     onSubmit () {
       this.$refs.form.validate((valid) => {
@@ -201,8 +227,24 @@ export default {
         }
       })
     },
+    handleRegion (data) {
+      let {choosedRegions, ...result} = data
+      result.regionCode = choosedRegions[choosedRegions.length - 1]
+      result.regionName = this.generateRegionName(choosedRegions)
+      return result
+    },
+    generateRegionName(values) {
+      let names = []
+      let source = this.regions
+      while (source && source.length && names.length < 3) {
+        let found = source.find(x => x.regionCode === values[names.length])
+        names.push(found.regionName)
+        source = found.regions
+      }
+      return names.join('')
+    },
     async addDetail () {
-      let res = await http.post(api.addOrg, this.form)
+      let res = await http.post(api.addOrg, this.handleRegion(this.form))
       if (res.code === 0) {
         this.$message('机构添加成功')
         this.customDialogVisible = false
@@ -212,7 +254,7 @@ export default {
       }
     },
     async updateDetail () {
-      let res = await http.post(api.updateOrg, this.form)
+      let res = await http.post(api.updateOrg, this.handleRegion(this.form))
       if (res.code === 0) {
         this.$message('机构更新成功')
         this.customDialogVisible = false

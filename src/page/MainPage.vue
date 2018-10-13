@@ -86,7 +86,8 @@ export default {
   data() {
     return {
       currentPage: '', //当前页面路由
-      clientHeight: ''
+      clientHeight: '',
+      role: session('role')
     }
   },
   mounted(){
