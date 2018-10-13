@@ -8,7 +8,10 @@ export default {
   uploadSingle: '/api/upload/single', //单文件上传
   reportCommit: '/api/check/presentation/commit', //体检报告提交
   getOperationProject: '/api/project/page', //分页查询体检项目列表
+  getProjectDetail: '/api/project', // /api/project/{projectId} 获取体检项目详情
+  delProject: '/api/project/delete', // /api/project/delete/{projectId} 获取体检项目详情
   projectAdd: '/api/project/add', //体检项目添加
+  projectUpdate: '/api/project/update', //体检项目修改
   validCode: '/api/project/valid/code', //项目编码校验
   /* 合作机构 */
   getOrgPage: '/api/org/page',
