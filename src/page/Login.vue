@@ -1,29 +1,64 @@
 <template>
   <div class="login">
     <div class="wrap pr">
-      <div class="login-box pa">
+      <div class="login-box pa" @keydown.enter="doLogin">
         <p class="title">健康天眼管理系统</p>
         <div class="form-item user-name">
-          <input type="text" placeholder="用户名">
+          <input type="text" v-model="form.username" placeholder="用户名">
         </div>
         <div class="form-item password">
-          <input type="password" placeholder="密码">
+          <input type="password" v-model="form.password" placeholder="密码">
         </div>
         <div class="form-item code-box fix">
-          <input type="text" placeholder="验证码" class="l">
-          <img src="https://via.placeholder.com/200x100" alt="" class="r">
+          <input type="text" v-model="form.verifycode" placeholder="验证码" class="l">
+          <img v-if="codeImgSrc" :src="codeImgSrc" alt="" class="r" @click="getCodeImg">
         </div>
-        <button class="btn-login">登录</button>
+        <button class="btn-login" @click="doLogin">登录</button>
       </div>
     </div>
   </div>
 </template>
 
 <script>
+import http from '../utils/http.js'
+import api from '../utils/api.js'
+
 export default {
   data () {
     return {
-
+      form: {
+        username: '',
+        password: '',
+        verifycode: ''
+      },
+      codeImgSrc: ''
+    }
+  },
+  mounted () {
+    this.getCodeImg()
+  },
+  methods: {
+    async getCodeImg () {
+      let {data} = await http.get(api.getCodeImg)
+      this.codeImgSrc = data
+    },
+    validate () {
+      let {username, password, verifycode} = this.form
+      if (!username) return {result: false, msg: '请输入用户名'}
+      if (!password) return {result: false, msg: '请输入密码'}
+      if (!verifycode) return {result: false, msg: '请输入验证码'}
+      return {result: true}
+    },
+    async doLogin () {
+      let {msg, result} = this.validate()
+      if (!result) return this.$message({message: msg, type: 'error'})
+      let res = await http.post(api.login, {
+        passWord: this.form.password,
+        loginName: this.form.username,
+        imgCode: this.form.verifycode
+      })
+      if (res.code !== 0) this.$message({message: res.msg, type: 'error'})
+      this.$router.replace(this.$route.query.redirect || '/')
     }
   }
 }

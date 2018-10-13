@@ -1,14 +1,19 @@
 import axios from 'axios'
 import { Message } from 'element-ui'
+import session from '../utils/session'
 
 axios.defaults.baseURL = process.env.API_ROOT
 axios.interceptors.request.use(config => {
+  let token = session('token')
+  if (token) config.headers['Authorization'] = token
   return config
 }, error => {
   return Promise.reject(error)
 })
 
 axios.interceptors.response.use(response => {
+  let {token} = response.headers
+  if (token) session('token', token)
   return response
 }, error => {
   return Promise.resolve(error.response)

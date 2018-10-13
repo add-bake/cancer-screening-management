@@ -7,6 +7,17 @@ import router from './router'
 import store from './store/index'
 import './icons'
 import dict from './utils/dict'
+import session from './utils/session'
+
+router.beforeEach((to, from, next) => {
+  if (to.path === '/login') return next()
+  let token = session('token')
+  if (!token) {
+    next({path: '/login', replace: true, query: {redirect: window.encodeURI(to.fullPath)}})
+  } else {
+    next()
+  }
+})
 
 Vue.prototype.$dict = dict
 Vue.prototype.$ctloading = (callback) => {
