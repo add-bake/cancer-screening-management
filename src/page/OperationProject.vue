@@ -6,14 +6,13 @@
       <el-breadcrumb-item>体检项目</el-breadcrumb-item>
     </el-breadcrumb>
     <div class="screen-box">
-      <div class="title-bar fix">
-        筛选查询
-        <el-button class="r" @click="screenSubmit">查询结果</el-button>
-        <el-button type="text" class="r" @click="screenShow = !screenShow">{{screenShow ? '收起' : '展开'}}筛选</el-button>
-      </div>
-      <el-form size="small" :inline="true" :model="screenData" class="demo-form-inline" v-show="screenShow" @submit.native.prevent>
+      <div class="title-bar">筛选查询</div>
+      <el-form size="small" :inline="true" :model="screenData" class="demo-form-inline" @submit.native.prevent>
         <el-form-item label="项目名称：">
           <el-input v-model="screenData.projectName" placeholder="项目名称"></el-input>
+        </el-form-item>
+        <el-form-item>
+          <el-button @click="screenSubmit">查询</el-button>
         </el-form-item>
       </el-form>
     </div>
@@ -195,7 +194,6 @@ export default {
       },
       uploadAction: '', //图片上传地址
       totalPage: 0,
-      screenShow: true,
       tableData: [],
       loading: false,
       customDialogVisible: false,

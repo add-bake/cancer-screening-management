@@ -6,17 +6,16 @@
       <el-breadcrumb-item>体检报告</el-breadcrumb-item>
     </el-breadcrumb>
     <div class="screen-box">
-      <div class="title-bar fix">
-        筛选查询
-        <el-button class="r" @click="screenSubmit">查询结果</el-button>
-        <el-button type="text" class="r" @click="screenShow = !screenShow">{{screenShow ? '收起' : '展开'}}筛选</el-button>
-      </div>
-      <el-form size="small" :inline="true" :model="screenData" class="demo-form-inline" v-show="screenShow" ref="screenForm" :rules="rules">
+      <div class="title-bar">筛选查询</div>
+      <el-form size="small" :inline="true" :model="screenData" class="demo-form-inline" ref="screenForm" :rules="rules">
         <el-form-item label="姓名：" prop="userName">
           <el-input type="text" v-model="screenData.userName" placeholder="姓名" autocomplete="off"></el-input>
         </el-form-item>
         <el-form-item label="手机号：" prop="phone">
           <el-input type="tel" v-model="screenData.phone" placeholder="手机号" autocomplete="off"></el-input>
+        </el-form-item>
+        <el-form-item>
+          <el-button @click="screenSubmit">查询</el-button>
         </el-form-item>
       </el-form>
     </div>
@@ -50,7 +49,8 @@
         <el-table-column
           prop="appointmentDate"
           label="预约时间"
-          width="110">
+          width="110"
+          :formatter="appointmentDateHandle">
         </el-table-column>
         <el-table-column
           prop="remark"
@@ -87,7 +87,7 @@
         <p class="item-title">预约信息</p>
         <div class="item-info fix">
           <p class="info-title l">预约时间：</p>
-          <p class="info-content l" v-html="detailData.appointmentDate"></p>
+          <p class="info-content l" v-html="appointmentDateHandle(detailData)"></p>
         </div>
         <div class="item-info fix">
           <p class="info-title l">预约地点：</p>
@@ -148,8 +148,9 @@
 </template>
 
 <script>
-import http from "../utils/http.js";
-import api from "../utils/api.js";
+import http from "../utils/http.js"
+import api from "../utils/api.js"
+import dayjs from 'dayjs'
 
 export default {
   created() {
@@ -179,7 +180,6 @@ export default {
         pageNum: 1
       },
       totalPage: 0,
-      screenShow: true,
       tableData: [],
       loading: false,
       customDialogVisible: false,
@@ -234,6 +234,9 @@ export default {
         return this.$message.warning("请等待文件上传完成");
       }
       window.open(this.fileList[0].url)
+    },
+    appointmentDateHandle(val) {
+      return dayjs(val.appointmentDate).format('YYYY-MM-DD')+' '+val.appointmentTimeStr
     },
     screenSubmit() {
       this.$refs["screenForm"].validate(valid => {

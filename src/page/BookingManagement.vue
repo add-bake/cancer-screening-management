@@ -6,17 +6,16 @@
       <el-breadcrumb-item>预约管理</el-breadcrumb-item>
     </el-breadcrumb>
     <div class="screen-box">
-      <div class="title-bar fix">
-        筛选查询
-        <el-button class="r" @click="screenSubmit">查询结果</el-button>
-        <el-button type="text" class="r" @click="screenControl">{{screenShow ? '收起' : '展开'}}筛选</el-button>
-      </div>
-      <el-form size="small" :inline="true" :model="screenData" class="demo-form-inline" v-show="screenShow">
+      <div class="title-bar">筛选查询</div>
+      <el-form size="small" :inline="true" :model="screenData" class="demo-form-inline">
         <el-form-item label="姓名：">
           <el-input v-model="screenData.userName" placeholder="姓名"></el-input>
         </el-form-item>
         <el-form-item label="分享者：">
           <el-input v-model="screenData.shareName" placeholder="分享者"></el-input>
+        </el-form-item>
+        <el-form-item>
+          <el-button @click="screenSubmit">查询</el-button>
         </el-form-item>
       </el-form>
     </div>
@@ -54,6 +53,7 @@
           prop="appointmentDate"
           label="预约时间"
           width="110"
+          :formatter="appointmentDateHandle"
         ></el-table-column>
         <el-table-column
           prop="checkAmount"
@@ -105,7 +105,7 @@
         <p class="item-title">预约信息</p>
         <div class="item-info fix">
           <p class="info-title l">预约时间：</p>
-          <p class="info-content l" v-html="detailData.appointmentDate"></p>
+          <p class="info-content l" v-html="appointmentDateHandle(detailData)"></p>
         </div>
         <div class="item-info fix">
           <p class="info-title l">预约地点：</p>
@@ -153,6 +153,7 @@
 <script>
 import http from '../utils/http.js'
 import api from '../utils/api.js'
+import dayjs from 'dayjs'
 
 export default {
   created() {
@@ -169,7 +170,6 @@ export default {
         pageNum: 1
       },
       totalPage: 0,
-      screenShow: true,
       tableData: [],
       loading: false,
       customDialogVisible: false,
@@ -194,11 +194,11 @@ export default {
     sexHandle(val) {
       return val.sex ? '男' : '女'
     },
+    appointmentDateHandle(val){
+      return dayjs(val.appointmentDate).format('YYYY-MM-DD')+' '+val.appointmentTimeStr
+    },
     statusHandle(val) {
       return this.$dict.orderStatus[val.state]
-    },
-    screenControl() {
-      this.screenShow = !this.screenShow
     },
     openDetail(row) {
       this.$ctloading(async () => {

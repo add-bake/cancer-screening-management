@@ -13,6 +13,7 @@
     "@vue/cli": "^3.0.5",
     "axios": "^0.18.0",
     "color": "^3.1.0",
+    "dayjs": "^1.7.7",
     "element-ui": "^2.4.8",
     "gsap": "^2.0.2",
     "quill-image-drop-module": "^1.0.3",

@@ -152,8 +152,7 @@ export default {
       }
     }
     .el-menu[role="menubar"] {
-      top: 60px;
-      padding-top: 20px;
+      top: 40px;
       border: none;
       .el-submenu__title {
         height: 60px;
