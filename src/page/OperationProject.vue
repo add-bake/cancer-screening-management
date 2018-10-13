@@ -55,6 +55,12 @@
           prop="createTime"
           label="创建时间">
         </el-table-column>
+        <el-table-column fixed="right" label="操作">
+          <template slot-scope="scope">
+            <el-button @click="editProject(scope.row)" type="text" size="small">修改</el-button>
+            <el-button @click="delProject(scope.row)" type="text" size="small">删除</el-button>
+          </template>
+        </el-table-column>
       </el-table>
       <el-pagination
         @size-change="handleSizeChange"
@@ -67,13 +73,13 @@
       </el-pagination>
     </div>
     <!-- 详情弹出框 -->
-    <el-dialog title="预约详情" width="760px" custom-class="custom-dialog" size="small" :visible.sync="customDialogVisible">
-      <el-form ref="form" :model="form" label-width="94px" :rules="rules">
+    <el-dialog title="预约详情" width="760px" custom-class="custom-dialog" :visible.sync="customDialogVisible">
+      <el-form ref="form" :model="form" label-width="94px" :rules="rules" size="small">
         <el-form-item label="项目名称：" prop="projectName">
           <el-input v-model="form.projectName"></el-input>
         </el-form-item>
         <el-form-item label="项目价格：" prop="amount">
-          <el-input v-model.number="form.amount"></el-input>
+          <el-input v-model="form.amount"></el-input>
         </el-form-item>
         <el-form-item label="项目描述：" prop="projectDescription">
           <el-input v-model="form.projectDescription"></el-input>
@@ -105,12 +111,11 @@
             :show-file-list="false"
             :on-success="handleAvatarSuccess"
             :before-upload="beforeAvatarUpload">
-            <img v-if="form.projectImg" :src="form.projectImg" class="avatar">
+            <img v-if="imgUrl" :src="imgUrl" class="avatar">
             <i v-else class="el-icon-plus avatar-uploader-icon"></i>
           </el-upload>
         </el-form-item>
         <el-form-item label="项目介绍：" prop="content">
-          <!-- <el-input v-model="form.content"></el-input> -->
           <quillEditor
             v-model="form.content"
             :options="editorOption">
@@ -147,6 +152,18 @@ export default {
     this.getOrgList()
   },
   data() {
+    let checkNumber = (rule, value, callback) => {
+      if (value) {
+        const reg = /^([1-9]\d*|0)(\.\d{1,2})?$/;
+        if (reg.test(value)) {
+          callback();
+        } else {
+          return callback(new Error("请输入正确的金额"));
+        }
+      } else {
+        callback();
+      }
+    }
     return {
       screenData: {
         projectName: ''
@@ -161,8 +178,8 @@ export default {
       tableData: [],
       loading: false,
       customDialogVisible: false,
-      detailData: {},
       orgList: [],
+      imgUrl: '',
       form: {
         projectName: '',
         amount: '',
@@ -177,45 +194,45 @@ export default {
         content: ''
       },
       rules: {
-        // projectName: [
-        //   { required: true, message: '请输入项目名称', trigger: 'blur' }
-        // ],
-        // amount: [
-        //   { required: true, message: '请输入项目价格', trigger: 'blur' },
-        //   { type: 'number', message: '项目价格必须为数字', trigger: 'blur' },
-        // ],
-        // projectDescription: [
-        //   { required: true, message: '请输入项目描述', trigger: 'blur' },
-        // ],
-        // projectCode: [
-        //   { required: true, message: '请输入项目编码', trigger: 'blur' },
-        //   { max: 32, message: '项目编码最长32个字符', trigger: 'blur' }
-        // ],
-        // orgCode: [
-        //   { required: true, message: '请选择机构', trigger: 'change' }
-        // ],
-        // selfBkge: [
-        //   { required: true, message: '请输入个人佣金', trigger: 'blur' },
-        //   { type: 'number', message: '个人佣金必须为数字', trigger: 'blur' }
-        // ],
-        // oneBkge: [
-        //   { required: true, message: '请输入上级佣金', trigger: 'blur' },
-        //   { type: 'number', message: '上级佣金必须为数字', trigger: 'blur' }
-        // ],
-        // orgBkge: [
-        //   { required: true, message: '请输入机构佣金', trigger: 'blur' },
-        //   { type: 'number', message: '机构佣金必须为数字', trigger: 'blur' }
-        // ],
-        // deviceBkge: [
-        //   { required: true, message: '请输入设备佣金', trigger: 'blur' },
-        //   { type: 'number', message: '设备佣金必须为数字', trigger: 'blur' }
-        // ],
-        // projectImg: [
-        //   { required: true, message: '请上传封面图', trigger: 'blur' }
-        // ],
-        // content: [
-        //   { required: true, message: '请输入项目介绍', trigger: 'blur' }
-        // ]
+        projectName: [
+          { required: true, message: '请输入项目名称', trigger: 'blur' }
+        ],
+        amount: [
+          { required: true, message: '请输入项目价格', trigger: 'blur' },
+          { validator: checkNumber, message: '项目价格必须为数字', trigger: 'blur' },
+        ],
+        projectDescription: [
+          { required: true, message: '请输入项目描述', trigger: 'blur' },
+        ],
+        projectCode: [
+          { required: true, message: '请输入项目编码', trigger: 'blur' },
+          { max: 32, message: '项目编码最长32个字符', trigger: 'blur' }
+        ],
+        orgCode: [
+          { required: true, message: '请选择机构', trigger: 'change' }
+        ],
+        selfBkge: [
+          { required: true, message: '请输入个人佣金', trigger: 'blur' },
+          { validator: checkNumber, message: '个人佣金必须为数字', trigger: 'blur' }
+        ],
+        oneBkge: [
+          { required: true, message: '请输入上级佣金', trigger: 'blur' },
+          { validator: checkNumber, message: '上级佣金必须为数字', trigger: 'blur' }
+        ],
+        orgBkge: [
+          { required: true, message: '请输入机构佣金', trigger: 'blur' },
+          { validator: checkNumber, message: '机构佣金必须为数字', trigger: 'blur' }
+        ],
+        deviceBkge: [
+          { required: true, message: '请输入设备佣金', trigger: 'blur' },
+          { validator: checkNumber, message: '设备佣金必须为数字', trigger: 'blur' }
+        ],
+        projectImg: [
+          { required: true, message: '请上传封面图', trigger: 'blur' }
+        ],
+        content: [
+          { required: true, message: '请输入项目介绍', trigger: 'blur' }
+        ]
       },
       editorOption: {
         modules: {
@@ -257,26 +274,72 @@ export default {
     onSubmit() {
       this.$refs["form"].validate(async valid => {
         if (valid) {
-          let vertify = await http.post(api.getOperationProject, {
-            projectCode: this.form.orgCode
-          })
-          if(vertify.data){
-            // let res = await http.post(api.projectAdd, this.form)
-            // console.log(res)
-          } else {
-            this.$message.warning('项目编码重复，请重新填写');
-          }
+          this.$ctloading(async () => {
+            let vertify = await http.post(api.validCode, {
+              projectCode: this.form.orgCode
+            })
+            if(vertify.data){
+              let res = await http.post(this.form.projectId ? api.projectUpdate : api.projectAdd, this.form)
+              if(res.code === 0){
+                this.$message.success(this.form.projectId ? '修改成功' : '添加成功');
+                this.page.pageNum = 1
+                this.customDialogVisible = false
+                this.getData()
+              } else {
+                this.$message.warning(res.msg);
+              }
+            } else {
+              this.$message.warning('项目编码重复，请重新填写');
+            }
+          });
         } else {
           return false;
         }
       });
     },
     async getOrgList() {
-      let res = await http.get(api.getOrgList)
-      this.orgList = res.data
+      this.$ctloading(async () => {
+        let res = await http.get(api.getOrgList)
+        if(res.code === 0){
+          this.orgList = res.data
+        } else {
+          this.$message.warning('合作机构列表获取失败,请重试')
+        }
+      })
+    },
+    async editProject(row){
+      this.$ctloading(async () => {
+        let res = await http.get(`${api.getProjectDetail}/${row.projectId}`)
+        if(res.code === 0){
+          this.form = res.data
+          this.imgUrl = `${process.env.IMG_ROOT}${res.data.projectImg}`
+          this.customDialogVisible = true
+        } else {
+          this.$message.warning('项目内容获取失败,请重试')
+        }
+      })
+    },
+    delProject(row) {
+      this.$confirm('此操作将删除当前体检项目, 是否继续?', '提示', {
+        confirmButtonText: '确定',
+        cancelButtonText: '取消',
+        type: 'warning'
+      }).then(() => {
+        this.$ctloading(async () => {
+          let res = await http.post(`${api.delProject}/${row.projectId}`,{})
+          if(res.code === 0){
+            this.$message.success('删除成功!')
+            this.page.pageNum = 1
+            this.getData()
+          } else {
+            this.$message.warning(res.msg)
+          }
+        })
+      })
     },
     handleAvatarSuccess(res, file) {
-      this.form['projectImg'] = URL.createObjectURL(file.raw);
+      this.imgUrl = URL.createObjectURL(file.raw)
+      this.form['projectImg'] = res.data
     },
     beforeAvatarUpload(file) {
       const isJPG = 'image/jpeg|image/png'.indexOf(file.type) >= 0;
@@ -326,13 +389,13 @@ export default {
 .avatar-uploader-icon {
   font-size: 28px;
   color: #8c939d;
-  width: 120px;
+  width: 247px;
   height: 120px;
   line-height: 120px;
   text-align: center;
 }
 .avatar {
-  width: 120px;
+  width: 247px;
   height: 120px;
   display: block;
 }
