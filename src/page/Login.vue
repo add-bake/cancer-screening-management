@@ -57,7 +57,7 @@ export default {
         loginName: this.form.username,
         imgCode: this.form.verifycode
       })
-      if (res.code !== 0) this.$message({message: res.msg, type: 'error'})
+      if (res.code !== 0) return this.$message({message: res.msg, type: 'error'})
       this.$router.replace(this.$route.query.redirect || '/')
     }
   }

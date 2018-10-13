@@ -59,7 +59,7 @@
           </el-badge>
           <p class="info l">欢迎您，admin</p>
           <img class="head l" src="https://via.placeholder.com/100x100" alt="">
-          <button class="btn-logout l"></button>
+          <button class="btn-logout l" @click="logout"></button>
         </div>
       </el-header>
 
@@ -77,6 +77,8 @@
 </template>
 
 <script>
+import session from '../utils/session'
+
 export default {
   created() {
     this.currentPage = this.$route.fullPath
@@ -97,6 +99,16 @@ export default {
     changeFixed(clientHeight){
       this.$refs.mainPage.style.height = clientHeight+'px';
     },
+    logout() {
+      this.$confirm('您将退出登录, 是否继续?', '提示', {
+        confirmButtonText: '退出登录',
+        cancelButtonText: '取消',
+        type: 'warning'
+      }).then(() => {
+        session('token', null)
+        this.$router.replace('/login')
+      })
+    }
   }
 }
 </script>

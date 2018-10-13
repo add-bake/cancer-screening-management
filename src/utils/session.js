@@ -9,7 +9,11 @@ export default function session (key, value) {
 
   if (hasKey) {
     if (hasValue) {
-      storage.setItem(key, JSON.stringify(value))
+      if (value === null) {
+        storage.removeItem(key)
+      } else {
+        storage.setItem(key, JSON.stringify(value))
+      }
     } else {
       let retValue = storage.getItem(key)
       return retValue != null ? JSON.parse(retValue) : undefined

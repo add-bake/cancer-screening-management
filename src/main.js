@@ -10,8 +10,14 @@ import dict from './utils/dict'
 import session from './utils/session'
 
 router.beforeEach((to, from, next) => {
-  if (to.path === '/login') return next()
   let token = session('token')
+  if (to.path === '/login') {
+    if (token) {
+      return next(false)
+    } else {
+      return next()
+    }
+  }
   if (!token) {
     next({path: '/login', replace: true, query: {redirect: window.encodeURI(to.fullPath)}})
   } else {

@@ -20,7 +20,7 @@
     <div class="table-box">
       <div class="title-bar fix">
         数据列表
-        <el-button class="r">导出信息</el-button>
+        <el-button class="r">添加</el-button>
       </div>
       <el-table
         :data="tableData"
@@ -32,46 +32,12 @@
           type="selection"
         ></el-table-column>
         <el-table-column
-          prop="name"
-          label="姓名"
-          width="80">
-        </el-table-column>
-        <el-table-column
-          prop="sex"
-          label="性别"
-          width="50"
-          :formatter="sexHandle">
-        </el-table-column>
-        <el-table-column
-          prop="phone"
-          label="手机号"
-          width="120">
-        </el-table-column>
-        <el-table-column
-          prop="appointmentDate"
-          label="预约时间"
-          width="160"
-        ></el-table-column>
-        <el-table-column
-          prop="checkAmount"
-          label="体检费用">
-        </el-table-column>
-        <el-table-column
           prop="orgName"
-          label="合作机构">
+          label="机构名称">
         </el-table-column>
         <el-table-column
-          prop="remark"
-          label="备注">
-        </el-table-column>
-        <el-table-column
-          prop="shareName"
-          label="分享者">
-        </el-table-column>
-        <el-table-column
-          prop="state"
-          label="状态"
-          :formatter="statusHandle">
+          prop="address"
+          label="体检地址">
         </el-table-column>
         <el-table-column
           prop="createTime"
@@ -186,9 +152,6 @@ export default {
     screenSubmit() {
       this.page.pageNum = 1
       this.getData()
-    },
-    sexHandle(val) {
-      return val.sex ? '男' : '女'
     },
     statusHandle(val) {
       return this.$dict.orderStatus[val.state]
