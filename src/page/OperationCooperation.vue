@@ -20,7 +20,7 @@
     <div class="table-box">
       <div class="title-bar fix">
         数据列表
-        <el-button class="r">添加</el-button>
+        <el-button class="r" @click="openAddDetail">添加</el-button>
       </div>
       <el-table
         :data="tableData"
@@ -40,6 +40,18 @@
           label="体检地址">
         </el-table-column>
         <el-table-column
+          prop="linkMan"
+          label="联系人"
+          width="80"
+          :formatter="emptyHandle"
+        ></el-table-column>
+        <el-table-column
+          prop="linkTel"
+          label="联系电话"
+          width="120"
+          :formatter="emptyHandle"
+        ></el-table-column>
+        <el-table-column
           prop="createTime"
           label="创建时间">
         </el-table-column>
@@ -47,7 +59,8 @@
           fixed="right"
           label="操作">
           <template slot-scope="scope">
-            <el-button @click="openDetail(scope.row)" type="text" size="small">查看详情</el-button>
+            <el-button @click="openEditDetail(scope.row)" type="text" size="small">修改</el-button>
+            <el-button @click="deleteDetail(scope.row)" type="text" size="small">删除</el-button>
           </template>
         </el-table-column>
       </el-table>
@@ -62,52 +75,28 @@
       </el-pagination>
     </div>
     <!-- 详情弹出框 -->
-    <el-dialog title="预约详情" width="760px" custom-class="custom-dialog" :visible.sync="customDialogVisible">
-      <div class="detail-item">
-        <p class="item-title">预约信息</p>
-        <div class="item-info fix">
-          <p class="info-title l">预约时间：</p>
-          <p class="info-content l" v-html="detailData.appointmentDate"></p>
-        </div>
-        <div class="item-info fix">
-          <p class="info-title l">预约地点：</p>
-          <p class="info-content l" v-html="detailData.orgName">111</p>
-        </div>
-      </div>
-      <div class="detail-item">
-        <p class="item-title">费用及备注</p>
-        <div class="item-info fix">
-          <p class="info-title l">体检费用：</p>
-          <p class="info-content l">￥{{detailData.checkAmount}}</p>
-        </div>
-        <div class="item-info fix">
-          <p class="info-title l">备注：</p>
-          <p class="info-content l" v-html="detailData.remark"></p>
-        </div>
-        <div class="item-info fix">
-          <p class="info-title l">支付状态：</p>
-          <p class="info-content l">{{$dict.orderStatus[detailData.state]}}</p>
-        </div>
-        <div class="item-info fix">
-          <p class="info-title l">分享者：</p>
-          <p class="info-content l" v-html="detailData.shareName"></p>
-        </div>
-      </div>
-      <div class="detail-item">
-        <p class="item-title">体检人信息</p>
-        <div class="item-info fix">
-          <p class="info-title l">姓名：</p>
-          <p class="info-content l" v-html="detailData.name"></p>
-        </div>
-        <div class="item-info fix">
-          <p class="info-title l">性别：</p>
-          <p class="info-content l">{{detailData.sex ? '男' : '女'}}</p>
-        </div>
-        <div class="item-info fix">
-          <p class="info-title l">手机号：</p>
-          <p class="info-content l" v-html="detailData.phone"></p>
-        </div>
-      </div>
+    <el-dialog title="机构详情" width="760px" custom-class="custom-dialog" :visible.sync="customDialogVisible">
+      <el-form ref="form" :model="form" label-width="94px" :rules="rules" size="small">
+        <el-form-item label="机构名称：" prop="orgName">
+          <el-input v-model="form.orgName"></el-input>
+        </el-form-item>
+        <el-form-item label="机构编码：" prop="orgCode">
+          <el-input v-model="form.orgCode"></el-input>
+        </el-form-item>
+        <el-form-item label="机构地址：" prop="address">
+          <el-input v-model="form.address"></el-input>
+        </el-form-item>
+        <el-form-item label="联系人：" prop="linkMan">
+          <el-input v-model="form.linkMan"></el-input>
+        </el-form-item>
+        <el-form-item label="联系电话：" prop="linkTel">
+          <el-input v-model="form.linkTel"></el-input>
+        </el-form-item>
+        <el-form-item>
+          <el-button size="small" @click="customDialogVisible = false">取消</el-button>
+          <el-button type="primary" size="small" @click="onSubmit">提交</el-button>
+        </el-form-item>
+      </el-form>
     </el-dialog>
   </div>
 </template>
@@ -134,7 +123,28 @@ export default {
       tableData: [],
       loading: false,
       customDialogVisible: false,
-      detailData: {}
+      currentOrgId: '',
+      form: {},
+      rules: {
+        orgName: [
+          {required: true, message: '请输入机构名称', trigger: 'blur'}
+        ],
+        orgCode: [
+          {required: true, message: '请输入机构编码', trigger: 'blur'},
+          {pattern: /^[0-9a-zA-Z]+$/, message: '您只能输入数字字母'}
+        ],
+        address: [
+          {required: true, message: '请输入机构地址', trigger: 'blur'},
+          {min: '6', message: '请输入至少6个字符', trigger: 'blur'}
+        ],
+        linkMan: [
+          {required: true, message: '请输入联系人姓名', trigger: 'blur'}
+        ],
+        linkTel: [
+          {required: true, message: '请输入联系人手机号', trigger: 'blur'},
+          {pattern: /^1[0-9]{10}$/, message: '请输入正确格式的手机号', trigger: 'blur'}
+        ]
+      }
     }
   },
   methods: {
@@ -152,18 +162,64 @@ export default {
       this.page.pageNum = 1
       this.getData()
     },
-    statusHandle(val) {
-      return this.$dict.orderStatus[val.state]
+    emptyHandle(row, column) {
+      return row[column.property] || '--'
     },
     screenControl() {
       this.screenShow = !this.screenShow
     },
-    openDetail(row) {
+    openAddDetail () {
+      this.form = {}
+      this.currentOrgId = ''
+      this.customDialogVisible = true
+    },
+    openEditDetail(row) {
+      this.currentOrgId = row.orgId
       this.$ctloading(async () => {
-        let res = await http.get(`${api.getBookingOrderDetail}/${row.healthCheckOrderId}`)
-        this.detailData = res.data
+        let res = await http.get(`${api.getOrgDetail}/${row.orgId}`)
+        this.form = res.data
         this.customDialogVisible = true
       })
+    },
+    async deleteDetail (row) {
+      let res = await http.post(`${api.addOrg}/${row.orgId}`)
+      if (res.code === 0) {
+        this.$message('机构删除成功')
+        this.getData()
+      } else {
+        this.$message(res.msg)
+      }
+    },
+    onSubmit () {
+      this.$refs.form.validate((valid) => {
+        if (valid) {
+          if (this.currentOrgId) {
+            this.updateDetail()
+          } else {
+            this.addDetail()
+          }
+        }
+      })
+    },
+    async addDetail () {
+      let res = await http.post(api.addOrg, this.form)
+      if (res.code === 0) {
+        this.$message('机构添加成功')
+        this.customDialogVisible = false
+        this.screenSubmit()
+      } else {
+        this.$message(res.msg)
+      }
+    },
+    async updateDetail () {
+      let res = await http.post(api.updateOrg, this.form)
+      if (res.code === 0) {
+        this.$message('机构更新成功')
+        this.customDialogVisible = false
+        this.getData()
+      } else {
+        this.$message(res.msg)
+      }
     },
     handleSizeChange(arg) {
       this.page.pageSize = arg

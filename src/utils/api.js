@@ -16,4 +16,9 @@ export default {
   /* 合作机构 */
   getOrgPage: '/api/org/page',
   getOrgList: '/api/org/list', //获取机构列表
+  getOrgDetail: '/api/org/detail', //获取机构详情
+  isOrgcodeValid: '/api/project/valid/code',
+  addOrg: '/api/org/add',
+  updateOrg: '/api/org/update',
+  deleteOrg: '/api/org/delete'
 }
