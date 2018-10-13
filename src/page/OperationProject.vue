@@ -20,7 +20,7 @@
     <div class="table-box">
       <div class="title-bar fix">
         数据列表
-        <el-button class="r" @click="customDialogVisible = true">添加</el-button>
+        <el-button class="r" @click="openDialog">添加</el-button>
       </div>
       <el-table
         :data="tableData"
@@ -36,26 +36,46 @@
           label="项目名称">
         </el-table-column>
         <el-table-column
-          prop="projectDescription"
-          label="项目介绍">
+          prop="amount"
+          label="项目价格">
         </el-table-column>
         <el-table-column
-          prop="amount"
-          label="价格">
+          prop="projectDescription"
+          label="项目描述">
+        </el-table-column>
+        <el-table-column
+          prop="projectCode"
+          label="项目编码">
+        </el-table-column>
+        <el-table-column
+          prop="orgName"
+          label="机构名称">
         </el-table-column>
         <el-table-column
           prop="selfBkge"
-          label="分享者分佣金额">
+          label="个人佣金">
         </el-table-column>
         <el-table-column
           prop="oneBkge"
-          label="分享者上级分佣金额">
+          label="上级佣金">
+        </el-table-column>
+        <el-table-column
+          prop="orgBkge"
+          label="机构佣金">
+        </el-table-column>
+        <el-table-column
+          prop="deviceBkge"
+          label="设备佣金">
         </el-table-column>
         <el-table-column
           prop="createTime"
-          label="创建时间">
+          label="创建时间"
+          width="110">
         </el-table-column>
-        <el-table-column fixed="right" label="操作">
+        <el-table-column
+          fixed="right"
+          label="操作"
+          width="90">
           <template slot-scope="scope">
             <el-button @click="editProject(scope.row)" type="text" size="small">修改</el-button>
             <el-button @click="delProject(scope.row)" type="text" size="small">删除</el-button>
@@ -73,7 +93,7 @@
       </el-pagination>
     </div>
     <!-- 详情弹出框 -->
-    <el-dialog title="预约详情" width="760px" custom-class="custom-dialog" :visible.sync="customDialogVisible">
+    <el-dialog title="体检项目" width="760px" custom-class="custom-dialog" :visible.sync="customDialogVisible">
       <el-form ref="form" :model="form" label-width="94px" :rules="rules" size="small">
         <el-form-item label="项目名称：" prop="projectName">
           <el-input v-model="form.projectName"></el-input>
@@ -87,7 +107,7 @@
         <el-form-item label="项目编码：" prop="projectCode">
           <el-input v-model="form.projectCode"></el-input>
         </el-form-item>
-        <el-form-item label="机构" prop="orgCode">
+        <el-form-item label="机构名称" prop="orgCode">
           <el-select v-model="form.orgCode" placeholder="请选择机构">
             <el-option v-for="item in orgList" :key="item.orgId" :label="item.orgName" :value="item.orgId"></el-option>
           </el-select>
@@ -139,6 +159,7 @@ import 'quill/dist/quill.bubble.css'
 import VueQuillEditor, { quillEditor } from 'vue-quill-editor'
 import { ImageDrop } from 'quill-image-drop-module'
 import ImageResize from 'quill-image-resize-module'
+import { setTimeout } from 'timers';
 window.Quill.register('modules/imageDrop', ImageDrop)
 window.Quill.register('modules/imageResize', ImageResize)
 
@@ -318,6 +339,11 @@ export default {
           this.$message.warning('项目内容获取失败,请重试')
         }
       })
+    },
+    openDialog() {
+      this.form = {}
+      this.$refs['form'].resetFields()
+      this.customDialogVisible = true
     },
     delProject(row) {
       this.$confirm('此操作将删除当前体检项目, 是否继续?', '提示', {

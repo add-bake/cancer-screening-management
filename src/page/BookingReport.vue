@@ -26,23 +26,49 @@
         <el-button class="r">导出信息</el-button>
       </div>
       <el-table :data="tableData" v-loading="loading" style="width: 100%">
-        <el-table-column fixed type="selection" width="55">
+        <el-table-column
+          fixed
+          type="selection"
+          width="55">
         </el-table-column>
-        <el-table-column prop="name" label="姓名" width="80">
+        <el-table-column
+          prop="name"
+          label="姓名"
+          width="80">
         </el-table-column>
-        <el-table-column prop="sex" label="性别" width="50" :formatter="sexHandle">
+        <el-table-column
+          prop="sex"
+          label="性别"
+          width="50"
+          :formatter="sexHandle">
         </el-table-column>
-        <el-table-column prop="phone" label="手机号" width="120">
+        <el-table-column
+          prop="phone"
+          label="手机号"
+          width="120">
         </el-table-column>
-        <el-table-column prop="appointmentDate" label="预约时间">
+        <el-table-column
+          prop="appointmentDate"
+          label="预约时间"
+          width="110">
         </el-table-column>
-        <el-table-column prop="remark" label="备注">
+        <el-table-column
+          prop="remark"
+          label="备注">
         </el-table-column>
-        <el-table-column prop="state" label="状态" :formatter="statusHandle">
+        <el-table-column
+          prop="state"
+          label="状态"
+          :formatter="statusHandle">
         </el-table-column>
-        <el-table-column prop="createTime" label="创建时间">
+        <el-table-column
+          prop="createTime"
+          label="创建时间"
+          width="110">
         </el-table-column>
-        <el-table-column fixed="right" label="操作">
+        <el-table-column
+          fixed="right"
+          label="操作">
           <template slot-scope="scope">
             <el-button @click="uploadReport(scope.row)" type="text" size="small">{{scope.row.state == '1' ? '上传报告' : '查看详情'}}</el-button>
           </template>

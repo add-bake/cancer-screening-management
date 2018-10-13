@@ -53,7 +53,7 @@
         <el-table-column
           prop="appointmentDate"
           label="预约时间"
-          width="160"
+          width="110"
         ></el-table-column>
         <el-table-column
           prop="checkAmount"
@@ -79,7 +79,7 @@
         <el-table-column
           prop="createTime"
           label="创建时间"
-          width="160">
+          width="110">
         </el-table-column>
         <el-table-column
           fixed="right"
