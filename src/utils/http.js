@@ -4,7 +4,6 @@ import session from '../utils/session'
 
 axios.defaults.baseURL = process.env.API_ROOT
 axios.interceptors.request.use(config => {
-  config.headers['Access-Control-Request-Headers'] = 'Authorization'
   let token = session('token')
   if (token) config.headers['Authorization'] = token
   return config
