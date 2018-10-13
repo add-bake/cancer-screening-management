@@ -5,38 +5,51 @@
       <el-breadcrumb-item>运营</el-breadcrumb-item>
       <el-breadcrumb-item>健康知识</el-breadcrumb-item>
     </el-breadcrumb>
+    <div class="screen-box">
+      <div class="title-bar">筛选查询</div>
+      <el-form size="small" :inline="true" :model="screenData" class="demo-form-inline" @submit.native.prevent>
+        <el-form-item label="标题：">
+          <el-input v-model="screenData.projectName" placeholder="标题"></el-input>
+        </el-form-item>
+        <el-form-item>
+          <el-button @click="screenSubmit">查询</el-button>
+        </el-form-item>
+      </el-form>
+    </div>
     <div class="table-box">
       <div class="title-bar fix">
         数据列表
+        <el-button class="r" @click="openDialog">添加</el-button>
       </div>
-      <el-table :data="tableData" v-loading="loading" style="width: 100%">
+      <el-table
+        :data="tableData"
+        v-loading="loading"
+        style="width: 100%">
+        <el-table-column
+          fixed
+          type="selection"
+          width="55">
         </el-table-column>
         <el-table-column
-          prop="name"
+          prop="title"
           label="标题">
         </el-table-column>
         <el-table-column
-          prop="sex"
+          prop="subTitle"
           label="副标题">
         </el-table-column>
         <el-table-column
-          prop="phone"
-          label="手机号"
-          width="120">
+          prop="readingNum"
+          label="阅读数">
         </el-table-column>
         <el-table-column
-          prop="appointmentDate"
-          label="预约时间"
-          width="110">
+          prop="showFlag"
+          label="是否显示"
+          :formatter="showFlagHandle">
         </el-table-column>
         <el-table-column
-          prop="remark"
-          label="备注">
-        </el-table-column>
-        <el-table-column
-          prop="state"
-          label="状态"
-          :formatter="statusHandle">
+          prop="seqNum"
+          label="排序号">
         </el-table-column>
         <el-table-column
           prop="createTime"
@@ -45,229 +58,358 @@
         </el-table-column>
         <el-table-column
           fixed="right"
-          label="操作">
+          label="操作"
+          width="90">
           <template slot-scope="scope">
-            <el-button @click="uploadReport(scope.row)" type="text" size="small">{{scope.row.state == '1' ? '上传报告' : '查看详情'}}</el-button>
+            <el-button @click="editProject(scope.row)" type="text" size="small">修改</el-button>
+            <el-button @click="delProject(scope.row)" type="text" size="small">删除</el-button>
           </template>
         </el-table-column>
       </el-table>
-      <el-pagination @size-change="handleSizeChange" @current-change="handleCurrentChange" :current-page="page.pageNum" :page-sizes="[10, 15, 20]" :page-size="page.pageSize" layout="total, sizes, prev, pager, next, jumper" :total="totalPage">
+      <el-pagination
+        @size-change="handleSizeChange"
+        @current-change="handleCurrentChange"
+        :current-page="page.pageNum"
+        :page-sizes="[10, 15, 20]"
+        :page-size="page.pageSize"
+        layout="total, sizes, prev, pager, next, jumper"
+        :total="totalPage">
       </el-pagination>
     </div>
     <!-- 详情弹出框 -->
-    <el-dialog
-      title="体检报告"
-      width="760px"
-      :custom-class="customClass"
-      :visible.sync="customDialogVisible">
-      <div class="detail-item">
-        <p class="item-title">预约信息</p>
-        <div class="item-info fix">
-          <p class="info-title l">预约时间：</p>
-          <p class="info-content l" v-html="detailData.appointmentDate"></p>
-        </div>
-        <div class="item-info fix">
-          <p class="info-title l">预约地点：</p>
-          <p class="info-content l" v-html="detailData.orgName">111</p>
-        </div>
-      </div>
-      <div class="detail-item">
-        <p class="item-title">费用及备注</p>
-        <div class="item-info fix">
-          <p class="info-title l">体检费用：</p>
-          <p class="info-content l">￥{{detailData.checkAmount}}</p>
-        </div>
-        <div class="item-info fix">
-          <p class="info-title l">备注：</p>
-          <p class="info-content l" v-html="detailData.remark"></p>
-        </div>
-      </div>
-      <div class="detail-item">
-        <p class="item-title">体检人信息</p>
-        <div class="item-info fix">
-          <p class="info-title l">姓名：</p>
-          <p class="info-content l" v-html="detailData.name"></p>
-        </div>
-        <div class="item-info fix">
-          <p class="info-title l">性别：</p>
-          <p class="info-content l">{{detailData.sex ? '男' : '女'}}</p>
-        </div>
-        <div class="item-info fix">
-          <p class="info-title l">手机号：</p>
-          <p class="info-content l" v-html="detailData.phone"></p>
-        </div>
-      </div>
-      <div class="detail-item" v-show="detailData.state !== 0">
-        <p class="item-title">{{detailData.state == '1' ? '上传报告' : '体检报告'}}</p>
-        <el-upload
-          class="upload-demo"
-          :action="uploadSingle"
-          :before-remove="beforeRemove"
-          :before-upload="beforeUpload"
-          :limit="2"
-          accept=".pdf,.PDF"
-          :on-exceed="handleExceed"
-          :on-success="handleSuccess"
-          :on-progress="handleProgress"
-          :on-change="handleChange"
-          :on-preview="handlePreview"
-          :file-list="fileList">
-          <el-button size="small" type="primary" v-show="detailData.state !== 0">{{detailData.state == 1 ? '点击上传' : '重新上传'}}</el-button>
-          <div slot="tip" class="el-upload__tip" v-show="detailData.state !== 0">只能上传pdf文件，且不超过10M</div>
-        </el-upload>
-      </div>
-      <span slot="footer" class="dialog-footer" v-show="detailData.state !== 0">
-        <el-button size="small" @click="customDialogVisible = false">取 消</el-button>
-        <el-button size="small" type="primary" @click="uploadSubmit">确 定</el-button>
-      </span>
+    <el-dialog title="体检项目" width="760px" custom-class="custom-dialog" :visible.sync="customDialogVisible">
+      <el-form ref="form" :model="form" label-width="94px" :rules="rules" size="small">
+        <el-form-item label="项目名称：" prop="projectName">
+          <el-input v-model="form.projectName"></el-input>
+        </el-form-item>
+        <el-form-item label="项目价格：" prop="amount">
+          <el-input v-model="form.amount"></el-input>
+        </el-form-item>
+        <el-form-item label="项目描述：" prop="projectDescription">
+          <el-input v-model="form.projectDescription"></el-input>
+        </el-form-item>
+        <el-form-item label="项目编码：" prop="projectCode">
+          <el-input v-model="form.projectCode"></el-input>
+        </el-form-item>
+        <el-form-item label="机构名称" prop="orgCode">
+          <el-select v-model="form.orgCode" placeholder="请选择机构">
+            <el-option v-for="item in orgList" :key="item.orgId" :label="item.orgName" :value="item.orgId"></el-option>
+          </el-select>
+        </el-form-item>
+        <el-form-item label="个人佣金：" prop="selfBkge">
+          <el-input v-model="form.selfBkge"></el-input>
+        </el-form-item>
+        <el-form-item label="上级佣金：" prop="oneBkge">
+          <el-input v-model="form.oneBkge"></el-input>
+        </el-form-item>
+        <el-form-item label="机构佣金：" prop="orgBkge">
+          <el-input v-model="form.orgBkge"></el-input>
+        </el-form-item>
+        <el-form-item label="设备佣金：" prop="deviceBkge">
+          <el-input v-model="form.deviceBkge"></el-input>
+        </el-form-item>
+        <el-form-item label="封面图：" prop="projectImg">
+          <el-upload
+            class="avatar-uploader"
+            :action="uploadAction"
+            :show-file-list="false"
+            :on-success="handleAvatarSuccess"
+            :before-upload="beforeAvatarUpload">
+            <img v-if="imgUrl" :src="imgUrl" class="avatar">
+            <i v-else class="el-icon-plus avatar-uploader-icon"></i>
+          </el-upload>
+        </el-form-item>
+        <el-form-item label="项目介绍：" prop="content">
+          <quillEditor
+            v-model="form.content"
+            :options="editorOption">
+          </quillEditor>
+        </el-form-item>
+        <el-form-item>
+          <el-button size="small" @click="customDialogVisible = false">取消</el-button>
+          <el-button type="primary" size="small" @click="onSubmit">提交</el-button>
+        </el-form-item>
+      </el-form>
     </el-dialog>
   </div>
 </template>
 
 <script>
-import http from "../utils/http.js";
-import api from "../utils/api.js";
+import http from '../utils/http.js'
+import api from '../utils/api.js'
+import 'quill/dist/quill.core.css'
+import 'quill/dist/quill.snow.css'
+import 'quill/dist/quill.bubble.css'
+import VueQuillEditor, { quillEditor } from 'vue-quill-editor'
+import { ImageDrop } from 'quill-image-drop-module'
+import ImageResize from 'quill-image-resize-module'
+import { setTimeout } from 'timers';
+window.Quill.register('modules/imageDrop', ImageDrop)
+window.Quill.register('modules/imageResize', ImageResize)
 
 export default {
+  components: {
+    quillEditor
+  },
   created() {
-    this.uploadSingle = `${process.env.API_ROOT}${api.uploadSingle}`
-    this.getData();
+    this.uploadAction = `${process.env.API_ROOT}${api.uploadSingle}`
+    this.getData()
   },
   data() {
-    let checkPhone = (rule, value, callback) => {
+    let checkNumber = (rule, value, callback) => {
       if (value) {
-        const reg = /^1[3|4|5|7|8][0-9]\d{8}$/;
+        const reg = /^([1-9]\d*|0)(\.\d{1,2})?$/;
         if (reg.test(value)) {
           callback();
         } else {
-          return callback(new Error("请输入正确的手机号"));
+          return callback(new Error("请输入正确的金额"));
         }
       } else {
         callback();
       }
-    };
+    }
     return {
+      screenData: {
+        projectName: ''
+      },
       page: {
         pageSize: 10,
         pageNum: 1
       },
+      uploadAction: '', //图片上传地址
       totalPage: 0,
       tableData: [],
       loading: false,
       customDialogVisible: false,
-      detailData: {},
-      rules: {
-        phone: [{ validator: checkPhone, trigger: "blur" }]
+      orgList: [],
+      imgUrl: '',
+      form: {
+        projectName: '',
+        amount: '',
+        projectDescription: '',
+        projectCode: '',
+        orgCode: '',
+        selfBkge: '',
+        oneBkge: '',
+        orgBkge: '',
+        deviceBkge: '',
+        projectImg: '',
+        content: ''
       },
-      fileList: [],
-      healthCheckOrderId: "",
-      uploadState: "",
-      customClass: 'custom-dialog'
-    };
+      rules: {
+        projectName: [
+          { required: true, message: '请输入项目名称', trigger: 'blur' }
+        ],
+        amount: [
+          { required: true, message: '请输入项目价格', trigger: 'blur' },
+          { validator: checkNumber, message: '项目价格必须为数字', trigger: 'blur' },
+        ],
+        projectDescription: [
+          { required: true, message: '请输入项目描述', trigger: 'blur' },
+        ],
+        projectCode: [
+          { required: true, message: '请输入项目编码', trigger: 'blur' },
+          { max: 32, message: '项目编码最长32个字符', trigger: 'blur' }
+        ],
+        orgCode: [
+          { required: true, message: '请选择机构', trigger: 'change' }
+        ],
+        selfBkge: [
+          { required: true, message: '请输入个人佣金', trigger: 'blur' },
+          { validator: checkNumber, message: '个人佣金必须为数字', trigger: 'blur' }
+        ],
+        oneBkge: [
+          { required: true, message: '请输入上级佣金', trigger: 'blur' },
+          { validator: checkNumber, message: '上级佣金必须为数字', trigger: 'blur' }
+        ],
+        orgBkge: [
+          { required: true, message: '请输入机构佣金', trigger: 'blur' },
+          { validator: checkNumber, message: '机构佣金必须为数字', trigger: 'blur' }
+        ],
+        deviceBkge: [
+          { required: true, message: '请输入设备佣金', trigger: 'blur' },
+          { validator: checkNumber, message: '设备佣金必须为数字', trigger: 'blur' }
+        ],
+        projectImg: [
+          { required: true, message: '请上传封面图', trigger: 'blur' }
+        ],
+        content: [
+          { required: true, message: '请输入项目介绍', trigger: 'blur' }
+        ]
+      },
+      editorOption: {
+        modules: {
+          toolbar: [
+            [{ 'size': ['small', false, 'large'] }],
+            ['bold', 'italic'],
+            [{ 'list': 'ordered'}, { 'list': 'bullet' }],
+            ['link', 'image']
+          ],
+          history: {
+            delay: 1000,
+            maxStack: 50,
+            userOnly: false
+          },
+          imageDrop: true,
+          imageResize: {
+            displayStyles: {
+              backgroundColor: 'black',
+              border: 'none',
+              color: 'white'
+            },
+            modules: [ 'Resize', 'DisplaySize', 'Toolbar' ]
+          }
+        }
+      }
+    }
   },
   methods: {
     async getData() {
-      this.loading = true;
-      let res = await http.post(api.getMedicalReport,
-        {
-          param: this.screenData,
-          page: this.page
-        }
-      );
-      this.loading = false;
-      this.tableData = res.data;
-      this.totalPage = res.page.total;
+      this.loading = true
+      let res = await http.post(api.getNews, {
+        param: this.screenData,
+        page: this.page
+      })
+      this.loading = false
+      this.tableData = res.data
+      this.totalPage = res.page.total
     },
-    handleExceed(files, fileList) {
-      this.$message.warning(`当前限制选择 1 个文件，本次选择了 ${files.length} 个文件，共选择了 ${files.length + fileList.length} 个文件`);
-    },
-    handleProgress(event) {
-      this.uploadState = "loading";
-    },
-    beforeRemove(file, fileList) {
-      return this.$confirm(`确定移除 ${file.name}？`);
-    },
-    handleChange(file,fileList) {
-      this.fileList = [fileList[fileList.length-1]]
-      this.fileList[0].name = `${this.detailData.name}体检报告.pdf`
-    },
-    beforeUpload(file) {
-      if (file.size > 1024 * 1024 * 10) {
-        return this.$message.warning("文件大小不能超过10M");
-      }
-    },
-    handleSuccess(response, file, fileList) {
-      fileList[0].url = `${process.env.IMG_ROOT}${fileList[0].response.data}`
-      this.fileList = fileList;
-      this.uploadState = "success";
-    },
-    handlePreview() {
-      if (this.uploadState == "loading") {
-        return this.$message.warning("请等待文件上传完成");
-      }
-      window.open(this.fileList[0].url)
-    },
-    statusHandle(val) {
-      return this.$dict.reportStatus[val.state];
-    },
-    uploadSubmit() {
-      if (this.uploadState == "loading") {
-        return this.$message.warning("请等待文件上传完成");
-      }
-      if (!this.fileList.length) {
-        return this.$message.warning("请先上传体检报告");
-      }
-      if (this.uploadState == "") {
-        return this.$message.warning("请先上传体检报告");
-      }
-      this.$ctloading(async () => {
-        let res = await http.post(api.reportCommit, {
-          healthCheckOrderId: this.healthCheckOrderId,
-          checkReportFile: this.fileList[0].response.data
-        });
-        if(res.data){
-          this.$message.success("上传成功");
-          this.detailData.state = 2
-        }
-      });
-    },
-    uploadReport(row) {
-      this.healthCheckOrderId = row.healthCheckOrderId;
-      this.$ctloading(async () => {
-        let res = await http.get(
-          `${api.getMedicalReportDetail}/${row.healthCheckOrderId}`
-        );
-        this.detailData = res.data;
-        this.customDialogVisible = true;
-        if(res.data.state !== 0){
-          this.customClass = 'custom-dialog has-upload'
+    onSubmit() {
+      this.$refs["form"].validate(async valid => {
+        if (valid) {
+          this.$ctloading(async () => {
+            let vertify = await http.post(api.validCode, {
+              projectCode: this.form.orgCode
+            })
+            if(vertify.data){
+              let res = await http.post(this.form.projectId ? api.projectUpdate : api.projectAdd, this.form)
+              if(res.code === 0){
+                this.$message.success(this.form.projectId ? '修改成功' : '添加成功');
+                this.page.pageNum = 1
+                this.customDialogVisible = false
+                this.getData()
+              } else {
+                this.$message.warning(res.msg);
+              }
+            } else {
+              this.$message.warning('项目编码重复，请重新填写');
+            }
+          });
         } else {
-          this.customClass = 'custom-dialog'
-        }
-        if(res.data.checkReportFile){
-          this.fileList[0] = {name: `${res.data.name}体检报告.pdf`, url: `${process.env.IMG_ROOT}${res.data.checkReportFile}`}
+          return false;
         }
       });
+    },
+    async editProject(row){
+      this.$ctloading(async () => {
+        let res = await http.get(`${api.getProjectDetail}/${row.projectId}`)
+        if(res.code === 0){
+          this.form = res.data
+          this.imgUrl = `${process.env.IMG_ROOT}${res.data.projectImg}`
+          this.customDialogVisible = true
+        } else {
+          this.$message.warning('项目内容获取失败,请重试')
+        }
+      })
+    },
+    openDialog() {
+      if(this.form.projectId){
+        this.form = {}
+        this.imgUrl = ''
+        this.$refs['form'].resetFields()
+      }
+      this.customDialogVisible = true
+    },
+    delProject(row) {
+      this.$confirm('此操作将删除当前体检项目, 是否继续?', '提示', {
+        confirmButtonText: '确定',
+        cancelButtonText: '取消',
+        type: 'warning'
+      }).then(() => {
+        this.$ctloading(async () => {
+          let res = await http.post(`${api.delProject}/${row.projectId}`,{})
+          if(res.code === 0){
+            this.$message.success('删除成功!')
+            this.page.pageNum = 1
+            this.getData()
+          } else {
+            this.$message.warning(res.msg)
+          }
+        })
+      })
+    },
+    handleAvatarSuccess(res, file) {
+      this.imgUrl = URL.createObjectURL(file.raw)
+      this.form['projectImg'] = res.data
+    },
+    beforeAvatarUpload(file) {
+      const isJPG = 'image/jpeg|image/png'.indexOf(file.type) >= 0;
+      const isLt2M = file.size / 1024 / 1024 < 10;
+
+      if (!isJPG) {
+        this.$message.error('上传头像图片只能是 JPG/PNG 格式!');
+      }
+      if (!isLt2M) {
+        this.$message.error('上传头像图片大小不能超过 10MB!');
+      }
+      return isJPG && isLt2M;
+    },
+    showFlagHandle(val){
+      return val.showFlag ? '是' : '否'
+    },
+    screenSubmit() {
+      this.page.pageNum = 1
+      this.getData()
     },
     handleSizeChange(arg) {
-      this.page.pageSize = arg;
-      this.getData();
+      this.page.pageSize = arg
+      this.getData()
     },
     handleCurrentChange(arg) {
-      this.page.pageNum = arg;
-      this.getData();
+      this.page.pageNum = arg
+      this.getData()
     }
   }
-};
+}
 </script>
 
 <style lang="less">
-.custom-dialog.has-upload {
-  .el-dialog__body {
-    padding: 46px 130px;
-  }
-  .el-dialog__footer {
-    text-align: center;
-  }
+.custom-dialog .el-dialog__body {
+  padding: 46px 24px;
+}
+.avatar-uploader {
+  margin-bottom: -14px;
+}
+.avatar-uploader .el-upload {
+  border: 1px dashed #d9d9d9;
+  border-radius: 6px;
+  cursor: pointer;
+  position: relative;
+  overflow: hidden;
+}
+.avatar-uploader .el-upload:hover {
+  border-color: #00a499;
+}
+.avatar-uploader-icon {
+  font-size: 28px;
+  color: #8c939d;
+  width: 247px;
+  height: 120px;
+  line-height: 120px;
+  text-align: center;
+}
+.avatar {
+  width: 247px;
+  height: 120px;
+  display: block;
+}
+.quill-editor:not(.bubble) .ql-container,
+.quill-editor:not(.bubble) .ql-container .ql-editor {
+  height: 15rem;
+  padding-bottom: 1rem;
+}
+.ql-toolbar.ql-snow {
+  height: 44px;
+  line-height: initial;
 }
 </style>

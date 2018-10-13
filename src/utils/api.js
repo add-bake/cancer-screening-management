@@ -21,5 +21,7 @@ export default {
   addOrg: '/api/org/add',
   updateOrg: '/api/org/update',
   deleteOrg: '/api/org/delete',
-  getRegions: '/api/regions/tree' //获取区域树
+  getRegions: '/api/regions/tree', //获取区域树
+  /* 健康知识 */
+  getNews: '/api/news/page', //分页获取健康知识列表
 }

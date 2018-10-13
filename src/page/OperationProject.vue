@@ -339,8 +339,11 @@ export default {
       })
     },
     openDialog() {
-      this.form = {}
-      this.$refs['form'].resetFields()
+      if(this.form.projectId){
+        this.form = {}
+        this.imgUrl = ''
+        this.$refs['form'].resetFields()
+      }
       this.customDialogVisible = true
     },
     delProject(row) {
