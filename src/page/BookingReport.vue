@@ -127,7 +127,7 @@ import api from "../utils/api.js";
 
 export default {
   created() {
-    this.uploadSingle = `${process.env.API_ROOT}${api.uploadSingle}`;
+    this.uploadSingle = `${process.env.API_ROOT}${api.uploadSingle}`
     this.getData();
   },
   data() {
