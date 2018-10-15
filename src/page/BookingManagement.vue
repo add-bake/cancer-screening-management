@@ -72,6 +72,10 @@
           label="分享者">
         </el-table-column>
         <el-table-column
+          prop="sharePname"
+          label="分享者上级">
+        </el-table-column>
+        <el-table-column
           prop="state"
           label="状态"
           :formatter="statusHandle">
@@ -129,6 +133,10 @@
         <div class="item-info fix">
           <p class="info-title l">分享者：</p>
           <p class="info-content l" v-html="detailData.shareName"></p>
+        </div>
+        <div class="item-info fix">
+          <p class="info-title l">分享者上级：</p>
+          <p class="info-content l" v-html="detailData.sharePname"></p>
         </div>
       </div>
       <div class="detail-item">
