@@ -1,6 +1,6 @@
 'use strict'
 module.exports = {
   NODE_ENV: '"production"',
-  API_ROOT: '"http://192.168.0.79:8080"',
+  API_ROOT: '"https://health.5ishequ.com.cn/health-mini-admin"',
   IMG_ROOT: '"https://health.5ishequ.com.cn/upload/health"',
 }
