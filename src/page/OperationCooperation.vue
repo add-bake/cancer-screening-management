@@ -9,7 +9,7 @@
       <div class="title-bar">
         筛选查询
       </div>
-      <el-form size="small" :inline="true" :model="screenData" class="demo-form-inline">
+      <el-form @keydown.native.enter="screenSubmit" size="small" :inline="true" :model="screenData" class="demo-form-inline">
         <el-form-item label="机构名称：">
           <el-input v-model="screenData.orgName" placeholder="机构名称"></el-input>
         </el-form-item>
@@ -77,7 +77,7 @@
     </div>
     <!-- 详情弹出框 -->
     <el-dialog title="机构详情" width="760px" custom-class="custom-dialog" :visible.sync="customDialogVisible">
-      <el-form ref="form" :model="form" label-width="94px" :rules="rules" size="small">
+      <el-form @keydown.native.enter="onSubmit" ref="form" :model="form" label-width="94px" :rules="rules" size="small">
         <el-form-item label="机构名称：" prop="orgName">
           <el-input v-model="form.orgName"></el-input>
         </el-form-item>
@@ -195,8 +195,8 @@ export default {
       this.$ctloading(async () => {
         let res = await http.get(`${api.getOrgDetail}/${row.orgId}`)
         if (this.$refs.form) this.$refs.form.resetFields()
-        let {regionCode, regionName, ...others} = res.data
-        others.choosedRegions = []
+        let {provinceRegionCode, cityRegionCode, countyRegionCode, regionName, ...others} = res.data
+        others.choosedRegions = [provinceRegionCode, cityRegionCode, countyRegionCode]
         this.form = others
         this.customDialogVisible = true
       })
@@ -244,7 +244,12 @@ export default {
       return names.join('')
     },
     async addDetail () {
-      let res = await http.post(api.addOrg, this.handleRegion(this.form))
+      let res = await http.post(api.addOrg, this.handleRegion({
+        ...this.form,
+        provinceRegionCode: this.form.choosedRegions[0],
+        cityRegionCode: this.form.choosedRegions[1],
+        countyRegionCode: this.form.choosedRegions[2]
+      }))
       if (res.code === 0) {
         this.$message('机构添加成功')
         this.customDialogVisible = false
@@ -254,7 +259,12 @@ export default {
       }
     },
     async updateDetail () {
-      let res = await http.post(api.updateOrg, this.handleRegion(this.form))
+      let res = await http.post(api.updateOrg, this.handleRegion({
+        ...this.form,
+        provinceRegionCode: this.form.choosedRegions[0],
+        cityRegionCode: this.form.choosedRegions[1],
+        countyRegionCode: this.form.choosedRegions[2]
+      }))
       if (res.code === 0) {
         this.$message('机构更新成功')
         this.customDialogVisible = false
