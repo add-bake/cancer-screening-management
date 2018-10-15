@@ -125,6 +125,7 @@
         <el-upload
           class="upload-demo"
           :action="uploadSingle"
+          :headers="uploadHeader"
           :before-remove="beforeRemove"
           :before-upload="beforeUpload"
           :limit="2"
@@ -150,6 +151,7 @@
 <script>
 import http from "../utils/http.js"
 import api from "../utils/api.js"
+import session from '../utils/session'
 import dayjs from 'dayjs'
 
 export default {
@@ -179,6 +181,7 @@ export default {
         pageSize: 10,
         pageNum: 1
       },
+      uploadHeader: {'Authorization': session('token')},
       totalPage: 0,
       tableData: [],
       loading: false,

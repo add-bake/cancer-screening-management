@@ -61,8 +61,8 @@
           label="操作"
           width="90">
           <template slot-scope="scope">
-            <el-button @click="editProject(scope.row)" type="text" size="small">修改</el-button>
-            <el-button @click="delProject(scope.row)" type="text" size="small">删除</el-button>
+            <el-button @click="edit(scope.row)" type="text" size="small">修改</el-button>
+            <el-button @click="del(scope.row)" type="text" size="small">删除</el-button>
           </template>
         </el-table-column>
       </el-table>
@@ -77,41 +77,34 @@
       </el-pagination>
     </div>
     <!-- 详情弹出框 -->
-    <el-dialog title="体检项目" width="760px" custom-class="custom-dialog" :visible.sync="customDialogVisible">
+    <el-dialog title="健康知识" width="760px" custom-class="custom-dialog" :visible.sync="customDialogVisible">
       <el-form ref="form" :model="form" label-width="94px" :rules="rules" size="small">
-        <el-form-item label="项目名称：" prop="projectName">
-          <el-input v-model="form.projectName"></el-input>
+        <el-form-item label="资讯标题：" prop="title">
+          <el-input v-model="form.title"></el-input>
         </el-form-item>
-        <el-form-item label="项目价格：" prop="amount">
-          <el-input v-model="form.amount"></el-input>
+        <el-form-item label="副标题：" prop="subTitle">
+          <el-input v-model="form.subTitle"></el-input>
         </el-form-item>
-        <el-form-item label="项目描述：" prop="projectDescription">
-          <el-input v-model="form.projectDescription"></el-input>
+        <el-form-item label="是否显示：" prop="showFlag">
+          <el-radio-group v-model="form.showFlag">
+            <el-radio label="true">是</el-radio>
+            <el-radio label="false">否</el-radio>
+          </el-radio-group>
         </el-form-item>
-        <el-form-item label="项目编码：" prop="projectCode">
-          <el-input v-model="form.projectCode"></el-input>
+        <el-form-item label="文章来源：" prop="source">
+          <el-input v-model="form.source"></el-input>
         </el-form-item>
-        <el-form-item label="机构名称" prop="orgCode">
-          <el-select v-model="form.orgCode" placeholder="请选择机构">
-            <el-option v-for="item in orgList" :key="item.orgId" :label="item.orgName" :value="item.orgId"></el-option>
-          </el-select>
+        <el-form-item label="备注：" prop="remark">
+          <el-input v-model="form.remark"></el-input>
         </el-form-item>
-        <el-form-item label="个人佣金：" prop="selfBkge">
-          <el-input v-model="form.selfBkge"></el-input>
+        <el-form-item label="排序号：" prop="seqNum">
+          <el-input v-model="form.seqNum"></el-input>
         </el-form-item>
-        <el-form-item label="上级佣金：" prop="oneBkge">
-          <el-input v-model="form.oneBkge"></el-input>
-        </el-form-item>
-        <el-form-item label="机构佣金：" prop="orgBkge">
-          <el-input v-model="form.orgBkge"></el-input>
-        </el-form-item>
-        <el-form-item label="设备佣金：" prop="deviceBkge">
-          <el-input v-model="form.deviceBkge"></el-input>
-        </el-form-item>
-        <el-form-item label="封面图：" prop="projectImg">
+        <el-form-item label="封面图：" prop="coverImgs">
           <el-upload
             class="avatar-uploader"
             :action="uploadAction"
+            :headers="uploadHeader"
             :show-file-list="false"
             :on-success="handleAvatarSuccess"
             :before-upload="beforeAvatarUpload">
@@ -119,7 +112,7 @@
             <i v-else class="el-icon-plus avatar-uploader-icon"></i>
           </el-upload>
         </el-form-item>
-        <el-form-item label="项目介绍：" prop="content">
+        <el-form-item label="资讯内容：" prop="content">
           <quillEditor
             v-model="form.content"
             :options="editorOption">
@@ -137,6 +130,7 @@
 <script>
 import http from '../utils/http.js'
 import api from '../utils/api.js'
+import session from '../utils/session'
 import 'quill/dist/quill.core.css'
 import 'quill/dist/quill.snow.css'
 import 'quill/dist/quill.bubble.css'
@@ -158,11 +152,11 @@ export default {
   data() {
     let checkNumber = (rule, value, callback) => {
       if (value) {
-        const reg = /^([1-9]\d*|0)(\.\d{1,2})?$/;
+        const reg = /^([1-9]\d*|0)?$/;
         if (reg.test(value)) {
           callback();
         } else {
-          return callback(new Error("请输入正确的金额"));
+          return callback(new Error("请输入正确的数字"));
         }
       } else {
         callback();
@@ -177,64 +171,41 @@ export default {
         pageNum: 1
       },
       uploadAction: '', //图片上传地址
+      uploadHeader: {'Authorization': session('token')},
       totalPage: 0,
       tableData: [],
       loading: false,
       customDialogVisible: false,
-      orgList: [],
       imgUrl: '',
       form: {
-        projectName: '',
-        amount: '',
-        projectDescription: '',
-        projectCode: '',
-        orgCode: '',
-        selfBkge: '',
-        oneBkge: '',
-        orgBkge: '',
-        deviceBkge: '',
-        projectImg: '',
-        content: ''
+        title: '',
+        subTitle: '',
+        showFlag: '',
+        seqNum: '',
+        coverImgs: '',
+        content: '',
+        source: '',
+        remark: ''
       },
       rules: {
-        projectName: [
-          { required: true, message: '请输入项目名称', trigger: 'blur' }
+        title: [
+          { required: true, message: '请输入资讯标题', trigger: 'blur' }
         ],
-        amount: [
-          { required: true, message: '请输入项目价格', trigger: 'blur' },
-          { validator: checkNumber, message: '项目价格必须为数字', trigger: 'blur' },
+        subTitle: [
+          { required: true, message: '请输入资讯副标题', trigger: 'blur' }
         ],
-        projectDescription: [
-          { required: true, message: '请输入项目描述', trigger: 'blur' },
+        showFlag: [
+          { required: true, message: '请选择是否显示', trigger: 'blur' }
         ],
-        projectCode: [
-          { required: true, message: '请输入项目编码', trigger: 'blur' },
-          { max: 32, message: '项目编码最长32个字符', trigger: 'blur' }
+        seqNum: [
+          { required: true, message: '请输入排序号', trigger: 'blur' },
+          { validator: checkNumber, message: '排序号必须为数字', trigger: 'blur' }
         ],
-        orgCode: [
-          { required: true, message: '请选择机构', trigger: 'change' }
-        ],
-        selfBkge: [
-          { required: true, message: '请输入个人佣金', trigger: 'blur' },
-          { validator: checkNumber, message: '个人佣金必须为数字', trigger: 'blur' }
-        ],
-        oneBkge: [
-          { required: true, message: '请输入上级佣金', trigger: 'blur' },
-          { validator: checkNumber, message: '上级佣金必须为数字', trigger: 'blur' }
-        ],
-        orgBkge: [
-          { required: true, message: '请输入机构佣金', trigger: 'blur' },
-          { validator: checkNumber, message: '机构佣金必须为数字', trigger: 'blur' }
-        ],
-        deviceBkge: [
-          { required: true, message: '请输入设备佣金', trigger: 'blur' },
-          { validator: checkNumber, message: '设备佣金必须为数字', trigger: 'blur' }
-        ],
-        projectImg: [
+        coverImgs: [
           { required: true, message: '请上传封面图', trigger: 'blur' }
         ],
         content: [
-          { required: true, message: '请输入项目介绍', trigger: 'blur' }
+          { required: true, message: '请输入资讯内容', trigger: 'blur' }
         ]
       },
       editorOption: {
@@ -278,56 +249,49 @@ export default {
       this.$refs["form"].validate(async valid => {
         if (valid) {
           this.$ctloading(async () => {
-            let vertify = await http.post(api.validCode, {
-              projectCode: this.form.orgCode
-            })
-            if(vertify.data){
-              let res = await http.post(this.form.projectId ? api.projectUpdate : api.projectAdd, this.form)
-              if(res.code === 0){
-                this.$message.success(this.form.projectId ? '修改成功' : '添加成功');
-                this.page.pageNum = 1
-                this.customDialogVisible = false
-                this.getData()
-              } else {
-                this.$message.warning(res.msg);
-              }
+            let res = await http.post(this.form.newsId ? api.newsUpdate : api.newsAdd, this.form)
+            if(res.code === 0){
+              this.$message.success(this.form.projectId ? '修改成功' : '添加成功');
+              this.page.pageNum = 1
+              this.customDialogVisible = false
+              this.getData()
             } else {
-              this.$message.warning('项目编码重复，请重新填写');
+              this.$message.warning(res.msg);
             }
-          });
+          })
         } else {
           return false;
         }
       });
     },
-    async editProject(row){
+    async edit(row){
       this.$ctloading(async () => {
-        let res = await http.get(`${api.getProjectDetail}/${row.projectId}`)
+        let res = await http.get(`${api.getNewsDetail}/${row.newsId}`)
         if(res.code === 0){
           this.form = res.data
-          this.imgUrl = `${process.env.IMG_ROOT}${res.data.projectImg}`
+          this.imgUrl = `${process.env.IMG_ROOT}${res.data.coverImgs}`
           this.customDialogVisible = true
         } else {
-          this.$message.warning('项目内容获取失败,请重试')
+          this.$message.warning('资讯内容获取失败,请重试')
         }
       })
     },
     openDialog() {
-      if(this.form.projectId){
+      if(this.form.newsId){
         this.form = {}
         this.imgUrl = ''
         this.$refs['form'].resetFields()
       }
       this.customDialogVisible = true
     },
-    delProject(row) {
-      this.$confirm('此操作将删除当前体检项目, 是否继续?', '提示', {
+    del(row) {
+      this.$confirm('此操作将删除当前资讯, 是否继续?', '提示', {
         confirmButtonText: '确定',
         cancelButtonText: '取消',
         type: 'warning'
       }).then(() => {
         this.$ctloading(async () => {
-          let res = await http.post(`${api.delProject}/${row.projectId}`,{})
+          let res = await http.post(`${api.delNews}/${row.newsId}`,{})
           if(res.code === 0){
             this.$message.success('删除成功!')
             this.page.pageNum = 1
@@ -336,11 +300,13 @@ export default {
             this.$message.warning(res.msg)
           }
         })
-      })
+      }).catch(() => {
+          console.log('用户取消操作')          
+      });
     },
     handleAvatarSuccess(res, file) {
       this.imgUrl = URL.createObjectURL(file.raw)
-      this.form['projectImg'] = res.data
+      this.form['coverImgs'] = res.data
     },
     beforeAvatarUpload(file) {
       const isJPG = 'image/jpeg|image/png'.indexOf(file.type) >= 0;
