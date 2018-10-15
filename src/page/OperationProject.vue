@@ -333,6 +333,7 @@ export default {
       this.$ctloading(async () => {
         let res = await http.get(`${api.getProjectDetail}/${row.projectId}`)
         if(res.code === 0){
+          if (this.$refs.form) this.$refs.form.resetFields()
           this.form = res.data
           this.imgUrl = `${process.env.IMG_ROOT}${res.data.projectImg}`
           this.customDialogVisible = true

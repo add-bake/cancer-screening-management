@@ -268,6 +268,7 @@ export default {
       this.$ctloading(async () => {
         let res = await http.get(`${api.getNewsDetail}/${row.newsId}`)
         if(res.code === 0){
+          if (this.$refs.form) this.$refs.form.resetFields()
           this.form = res.data
           this.imgUrl = `${process.env.IMG_ROOT}${res.data.coverImgs}`
           this.customDialogVisible = true
@@ -301,7 +302,7 @@ export default {
           }
         })
       }).catch(() => {
-          console.log('用户取消操作')          
+          console.log('用户取消操作')
       });
     },
     handleAvatarSuccess(res, file) {
