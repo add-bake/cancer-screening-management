@@ -50,13 +50,13 @@
 
     <el-container>
       <el-header class="fix">
-        <p class="login-info l">这是您第 23323 次登录，上次登录日期：2018：05：20 08：39</p>
+        <p class="login-info l">上次登录时间：{{logintime}}</p>
         <div class="tool-box r">
-          <el-badge :value="200" :max="99" class="item">
+          <!-- <el-badge :value="200" :max="99" class="item">
             <button class="btn-message"></button>
-          </el-badge>
-          <p class="info l">欢迎您，admin</p>
-          <img class="head l" src="https://via.placeholder.com/100x100" alt="">
+          </el-badge> -->
+          <p class="info l">欢迎您，{{username}}</p>
+          <!-- <img class="head l" src="https://via.placeholder.com/100x100" alt=""> -->
           <button class="btn-logout l" @click="logout"></button>
         </div>
       </el-header>
@@ -85,7 +85,9 @@ export default {
     return {
       currentPage: '', //当前页面路由
       clientHeight: '',
-      role: session('role')
+      role: session('role'),
+      username: session('username'),
+      logintime: session('logintime')
     }
   },
   mounted(){
