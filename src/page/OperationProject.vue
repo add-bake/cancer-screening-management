@@ -127,6 +127,7 @@
           <el-upload
             class="avatar-uploader"
             :action="uploadAction"
+            :headers="uploadHeader"
             :show-file-list="false"
             :on-success="handleAvatarSuccess"
             :before-upload="beforeAvatarUpload">
@@ -152,6 +153,7 @@
 <script>
 import http from '../utils/http.js'
 import api from '../utils/api.js'
+import session from '../utils/session'
 import 'quill/dist/quill.core.css'
 import 'quill/dist/quill.snow.css'
 import 'quill/dist/quill.bubble.css'
@@ -193,6 +195,7 @@ export default {
         pageNum: 1
       },
       uploadAction: '', //图片上传地址
+      uploadHeader: {'Authorization': session('token')},
       totalPage: 0,
       tableData: [],
       loading: false,
