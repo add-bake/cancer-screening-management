@@ -13,7 +13,7 @@
           <input type="text" v-model="form.verifycode" placeholder="验证码" class="l">
           <img v-if="codeImgSrc" :src="codeImgSrc" alt="" class="r" @click="getCodeImg">
         </div>
-        <button class="btn-login" @click="doLogin">登录</button>
+        <el-button class="btn-login" :loading="logining" @click="doLogin">登录</el-button>
       </div>
     </div>
   </div>
@@ -28,11 +28,12 @@ export default {
   data () {
     return {
       form: {
-        username: '',
+        username: session('username'),
         password: '',
         verifycode: ''
       },
-      codeImgSrc: ''
+      codeImgSrc: '',
+      logining: false
     }
   },
   mounted () {
@@ -53,11 +54,13 @@ export default {
     async doLogin () {
       let {msg, result} = this.validate()
       if (!result) return this.$message({message: msg, type: 'error'})
+      this.logining = true
       let res = await http.post(api.login, {
         passWord: this.form.password,
         loginName: this.form.username,
         imgCode: this.form.verifycode
       })
+      this.logining = false
       if (res.code !== 0) return this.$message({message: res.msg, type: 'error'})
       session('role', res.data.role)
       session('username', this.form.username)
@@ -139,7 +142,6 @@ body,
       border-radius: 3px;
       font-size: 20px;
       color: #fff;
-      line-height: 50px;
       text-align: center;
       background-color: #00a29a;
     }
