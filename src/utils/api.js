@@ -31,4 +31,7 @@ export default {
   /* 财务 */
   getNews: '/api/news/page', //分页获取健康知识列表
   getFinanceSettlement: '/api/finance/settlement/page', //财务结算
+  getFinanceSettlementDetail: '/api/finance/settle/detail/page', //财务结算明细
+  getFinanceBkge: '/api/finance/bkge/page', //佣金发放
+
 }

@@ -1,7 +1,7 @@
 import axios from 'axios'
 import { Message } from 'element-ui'
 import session from '../utils/session'
-import router from '../router'
+import router from '../router/index.js'
 
 axios.defaults.baseURL = process.env.API_ROOT
 axios.interceptors.request.use(config => {
@@ -13,12 +13,19 @@ axios.interceptors.request.use(config => {
 })
 
 axios.interceptors.response.use(response => {
-  if (response.data.code === 500 || response.data.code === 403) return router.replace({path: '/login', query: {redirect: window.location.hash.slice(1)}})
+  if (response.data.code === 500) {
+    session('token','')
+    return router.replace({path: '/login', query: {redirect: window.location.hash.slice(1)}})
+  }
   let {token} = response.headers
   if (token) session('token', token)
   return response
 }, error => {
-  return Promise.resolve(error.response)
+  if (error.response.status === 403) {
+    session('token','')
+    return router.replace({path: '/login', query: {redirect: window.location.hash.slice(1)}})
+  }
+  return Promise.reject(error.response)
 })
 
 let checkStatus = response => {

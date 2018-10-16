@@ -12,7 +12,6 @@
           <el-input v-model="screenData.orgName" placeholder="合作结构"></el-input>
         </el-form-item>
         <el-form-item label="预约时间：">
-          <!-- <el-input v-model="screenData.thisMonth" placeholder="预约时间"></el-input> -->
           <el-date-picker
             v-model="screenData.thisMonth"
             value-format="yyyyMM"
