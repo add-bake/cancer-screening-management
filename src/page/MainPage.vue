@@ -36,14 +36,14 @@
               <el-menu-item index="/finance/salary">· 佣金发放</el-menu-item>
             </el-menu-item-group>
           </el-submenu>
-          <!-- <el-submenu index="4"> -->
-            <!-- <template slot="title"><i class="menu-icon icon04"></i>系统</template> -->
-            <!-- <el-menu-item-group> -->
-              <!-- <el-menu-item index="/system/user">· 用户管理</el-menu-item> -->
+          <el-submenu index="4">
+            <template slot="title"><i class="menu-icon icon04"></i>系统</template>
+            <el-menu-item-group>
+              <el-menu-item index="/system/user">· 用户管理</el-menu-item>
               <!-- <el-menu-item index="/system/character">· 角色管理</el-menu-item> -->
               <!-- <el-menu-item index="/system/dict">· 数据字典</el-menu-item> -->
-            <!-- </el-menu-item-group> -->
-          <!-- </el-submenu> -->
+            </el-menu-item-group>
+          </el-submenu>
         </el-menu>
       </el-scrollbar>
     </el-aside>
