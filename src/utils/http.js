@@ -12,44 +12,32 @@ axios.interceptors.request.use(config => {
   return Promise.reject(error)
 })
 
+function redirectToLogin () {
+  session('token','')
+  router.replace({path: '/login', query: {redirect: window.location.hash.slice(1)}})
+}
+
 axios.interceptors.response.use(response => {
-  if (response.data.code === 500) {
-    session('token','')
-    return router.replace({path: '/login', query: {redirect: window.location.hash.slice(1)}})
+  if (response.status === 403 || response.data.code === 500) {
+    return redirectToLogin()
   }
   let {token} = response.headers
   if (token) session('token', token)
   return response
 }, error => {
-  if (error.response.status === 403) {
-    session('token','')
-    return router.replace({path: '/login', query: {redirect: window.location.hash.slice(1)}})
-  }
   return Promise.reject(error.response)
 })
 
 let checkStatus = response => {
   // 如果http状态码正常，则直接返回数据
   if (response && (response.status === 200 || response.status === 304 || response.status === 400)) {
+    // 如果不需要除了data之外的数据，可以直接返回 response.data
     return response.data
-    // 如果不需要除了data之外的数据，可以直接 return response.data
   }
-  // 异常状态下，把错误信息返回去
-  return {
-    status: -404,
-    msg: '网络异常'
-  }
-}
-
-function checkCode (res) {
-  // 如果code异常(这里已经包括网络错误，服务器错误，后端抛出的错误)，可以弹出一个错误提示，告诉用户
-  if (res.status === -404) {
-    Message({
-      message: res.msg,
-      type: 'warning'
-    })
-  }
-  return res
+  Message({
+    message: res.msg,
+    type: 'warning'
+  })
 }
 
 export default {
@@ -72,10 +60,6 @@ export default {
     }).then(
       (response) => {
         return checkStatus(response)
-      }
-    ).then(
-      (res) => {
-        return checkCode(res)
       }
     )
   }
