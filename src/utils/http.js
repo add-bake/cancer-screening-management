@@ -13,7 +13,7 @@ axios.interceptors.request.use(config => {
 })
 
 axios.interceptors.response.use(response => {
-  if (response.data.code === 500) return router.replace({path: '/login', query: {redirect: window.location.hash.slice(1)}})
+  if (response.data.code === 500 || response.data.code === 403) return router.replace({path: '/login', query: {redirect: window.location.hash.slice(1)}})
   let {token} = response.headers
   if (token) session('token', token)
   return response

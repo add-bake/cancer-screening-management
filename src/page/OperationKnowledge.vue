@@ -146,7 +146,6 @@ export default {
     quillEditor
   },
   created() {
-    this.uploadAction = `${process.env.API_ROOT}${api.uploadSingle}`
     this.getData()
   },
   data() {
@@ -170,7 +169,7 @@ export default {
         pageSize: 10,
         pageNum: 1
       },
-      uploadAction: '', //图片上传地址
+      uploadAction: `${process.env.API_ROOT}${api.uploadSingle}`, //图片上传地址
       uploadHeader: {'Authorization': session('token')},
       totalPage: 0,
       tableData: [],

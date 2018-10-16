@@ -28,4 +28,7 @@ export default {
   newsAdd: '/api/news/add', //健康资讯添加
   newsUpdate: '/api/news/update', //健康资讯修改
   delNews: '/api/news/delete', //资讯删除
+  /* 财务 */
+  getNews: '/api/news/page', //分页获取健康知识列表
+  getFinanceSettlement: '/api/finance/settlement/page', //财务结算
 }

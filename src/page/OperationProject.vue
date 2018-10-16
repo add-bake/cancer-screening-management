@@ -169,12 +169,11 @@ export default {
     quillEditor
   },
   created() {
-    this.uploadAction = `${process.env.API_ROOT}${api.uploadSingle}`
     this.getData()
     this.getOrgList()
   },
   data() {
-    let checkNumber = (rule, value, callback) => {
+    let checkAmount = (rule, value, callback) => {
       if (value) {
         const reg = /^([1-9]\d*|0)(\.\d{1,2})?$/;
         if (reg.test(value)) {
@@ -194,7 +193,7 @@ export default {
         pageSize: 10,
         pageNum: 1
       },
-      uploadAction: '', //图片上传地址
+      uploadAction: `${process.env.API_ROOT}${api.uploadSingle}`, //图片上传地址
       uploadHeader: {'Authorization': session('token')},
       totalPage: 0,
       tableData: [],
@@ -221,7 +220,7 @@ export default {
         ],
         amount: [
           { required: true, message: '请输入项目价格', trigger: 'blur' },
-          { validator: checkNumber, message: '项目价格必须为数字', trigger: 'blur' },
+          { validator: checkAmount, message: '项目价格必须为数字', trigger: 'blur' },
         ],
         projectDescription: [
           { required: true, message: '请输入项目描述', trigger: 'blur' },
@@ -235,19 +234,19 @@ export default {
         ],
         selfBkge: [
           { required: true, message: '请输入个人佣金', trigger: 'blur' },
-          { validator: checkNumber, message: '个人佣金必须为数字', trigger: 'blur' }
+          { validator: checkAmount, message: '个人佣金必须为数字', trigger: 'blur' }
         ],
         oneBkge: [
           { required: true, message: '请输入上级佣金', trigger: 'blur' },
-          { validator: checkNumber, message: '上级佣金必须为数字', trigger: 'blur' }
+          { validator: checkAmount, message: '上级佣金必须为数字', trigger: 'blur' }
         ],
         orgBkge: [
           { required: true, message: '请输入机构佣金', trigger: 'blur' },
-          { validator: checkNumber, message: '机构佣金必须为数字', trigger: 'blur' }
+          { validator: checkAmount, message: '机构佣金必须为数字', trigger: 'blur' }
         ],
         deviceBkge: [
           { required: true, message: '请输入设备佣金', trigger: 'blur' },
-          { validator: checkNumber, message: '设备佣金必须为数字', trigger: 'blur' }
+          { validator: checkAmount, message: '设备佣金必须为数字', trigger: 'blur' }
         ],
         projectImg: [
           { required: true, message: '请上传封面图', trigger: 'blur' }
