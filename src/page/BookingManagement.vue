@@ -45,11 +45,6 @@
           :formatter="sexHandle">
         </el-table-column>
         <el-table-column
-          prop="phone"
-          label="手机号"
-          width="120">
-        </el-table-column>
-        <el-table-column
           prop="appointmentDate"
           label="预约时间"
           width="110"
@@ -148,10 +143,6 @@
         <div class="item-info fix">
           <p class="info-title l">性别：</p>
           <p class="info-content l">{{detailData.sex ? '男' : '女'}}</p>
-        </div>
-        <div class="item-info fix">
-          <p class="info-title l">手机号：</p>
-          <p class="info-content l" v-html="detailData.phone"></p>
         </div>
       </div>
     </el-dialog>

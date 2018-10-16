@@ -9,7 +9,7 @@
       <div class="title-bar">筛选查询</div>
       <el-form size="small" :inline="true" :model="screenData" class="demo-form-inline" @submit.native.prevent>
         <el-form-item label="标题：">
-          <el-input v-model="screenData.projectName" placeholder="标题"></el-input>
+          <el-input v-model="screenData.title" placeholder="标题"></el-input>
         </el-form-item>
         <el-form-item>
           <el-button @click="screenSubmit">查询</el-button>
@@ -164,7 +164,7 @@ export default {
     }
     return {
       screenData: {
-        projectName: ''
+        title: ''
       },
       page: {
         pageSize: 10,

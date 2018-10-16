@@ -11,9 +11,6 @@
         <el-form-item label="姓名：" prop="userName">
           <el-input type="text" v-model="screenData.userName" placeholder="姓名" autocomplete="off"></el-input>
         </el-form-item>
-        <el-form-item label="手机号：" prop="phone">
-          <el-input type="tel" v-model="screenData.phone" placeholder="手机号" autocomplete="off"></el-input>
-        </el-form-item>
         <el-form-item>
           <el-button @click="screenSubmit">查询</el-button>
         </el-form-item>
@@ -40,11 +37,6 @@
           label="性别"
           width="50"
           :formatter="sexHandle">
-        </el-table-column>
-        <el-table-column
-          prop="phone"
-          label="手机号"
-          width="120">
         </el-table-column>
         <el-table-column
           prop="appointmentDate"
@@ -115,10 +107,6 @@
           <p class="info-title l">性别：</p>
           <p class="info-content l">{{detailData.sex ? '男' : '女'}}</p>
         </div>
-        <div class="item-info fix">
-          <p class="info-title l">手机号：</p>
-          <p class="info-content l" v-html="detailData.phone"></p>
-        </div>
       </div>
       <div class="detail-item" v-show="detailData.state !== 0">
         <p class="item-title">{{detailData.state == '1' ? '上传报告' : '体检报告'}}</p>
@@ -174,8 +162,7 @@ export default {
     };
     return {
       screenData: {
-        userName: "",
-        phone: ""
+        userName: ""
       },
       page: {
         pageSize: 10,
