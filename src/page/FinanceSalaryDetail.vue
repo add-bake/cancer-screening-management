@@ -44,7 +44,7 @@
           <el-table-column
             prop="name"
             label="体检者姓名"
-            width="80">
+            width="120">
           </el-table-column>
           <el-table-column
             prop="orgName"
@@ -54,11 +54,13 @@
             prop="amount"
             label="体检费用"
             width="110"
+            :formatter="moneyHandle('amount')"
           ></el-table-column>
           <el-table-column
             prop="bkgeAmount"
-            label="分佣金额">
-          </el-table-column>
+            label="分佣金额"
+            :formatter="moneyHandle('bkgeAmount')"
+          ></el-table-column>
           <el-table-column
             prop="bkgeLevel"
             label="分佣类型"
@@ -155,6 +157,9 @@ export default {
     }
   },
   methods: {
+    moneyHandle (key) {
+      return (row) => row[key] + '元'
+    },
     bkgeType (row) {
       return row.bkgeType === 1 ? '直接分佣' : '间接分佣'
     },
