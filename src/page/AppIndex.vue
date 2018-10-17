@@ -8,6 +8,11 @@
         <IconNumber color="#f56c6c" icon="index-top-4" :number="numbers.four" desc="30天内日均体检数"></IconNumber>
       </div>
     </transition>
+    <transition appear name="fade">
+      <div class="wrap-display">
+        <img class="display-image" src="../assets/display.jpg" alt="">
+      </div>
+    </transition>
   </div>
 </template>
 
@@ -50,5 +55,11 @@ export default {
   grid-auto-rows: 120px;
   grid-gap: 16px 20px;
   grid-template-columns: repeat(4, 1fr);
+}
+.wrap-display {
+  padding-top: 20px;
+}
+.wrap-display .display-image {
+  width: 100%;
 }
 </style>
