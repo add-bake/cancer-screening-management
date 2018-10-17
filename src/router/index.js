@@ -18,6 +18,7 @@ import SystemCharacter from '@/page/SystemCharacter'
 import SystemDict from '@/page/SystemDict'
 import AppIndex from '@/page/AppIndex'
 import UserIndex from '@/page/UserIndex'
+import FinanceSalaryDetail from '@/page/FinanceSalaryDetail'
 
 Vue.use(Router)
 
@@ -37,7 +38,13 @@ export default new Router({
         {path: '/operation/customer', component: OperationCustomer},
         {path: '/operation/help', component: OperationHelp},
         {path: '/operation/cooperation', component: OperationCooperation},
-        {path: '/finance/salary', component: FinanceSalary},
+        {
+          path: '/finance/salary',
+          component: FinanceSalary,
+          children: [
+            {path: ':userId', props: true, component: FinanceSalaryDetail}
+          ]
+        },
         {path: '/finance/settlement', component: FinanceSettlement},
         {path: '/finance/settlement_detail', component: FinanceSettlementDetail},
         {path: '/system/user', component: SystemUser},

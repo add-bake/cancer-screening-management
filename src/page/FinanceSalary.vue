@@ -30,10 +30,6 @@
           fixed
           type="selection"
         ></el-table-column>
-        <el-table-column
-          prop="orgName"
-          label="合作机构"
-          width="150">
         </el-table-column>
         <el-table-column
           prop="nickName"
@@ -46,8 +42,20 @@
           width="110"
         ></el-table-column>
         <el-table-column
+          prop="bankName"
+          label="银行"
+          width="150">
+        </el-table-column>
+        <el-table-column
           prop="bankCard"
           label="银行卡号">
+        </el-table-column>
+        <el-table-column
+          fixed="right"
+          label="操作">
+          <template slot-scope="scope">
+            <el-button @click="$router.push(`/finance/salary/${scope.row.userId}`)" type="text" size="small">查看详情</el-button>
+          </template>
         </el-table-column>
       </el-table>
       <el-pagination
@@ -60,6 +68,9 @@
         :total="totalPage">
       </el-pagination>
     </div>
+    <transition name="fade">
+      <router-view class="detail-view"></router-view>
+    </transition>
   </div>
 </template>
 
@@ -89,7 +100,7 @@ export default {
   methods: {
     async getData() {
       this.loading = true
-      let res = await http.post(api.getFinanceSettlement, {
+      let res = await http.post(api.getFinanceBkge, {
         param: this.screenData,
         page: this.page
       })
@@ -114,5 +125,15 @@ export default {
 </script>
 
 <style lang="less" scoped>
-
+.table-box {
+  position: relative;
+  z-index: 0;
+}
+.detail-view {
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: 0;
+  bottom: 0;
+}
 </style>

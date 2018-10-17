@@ -33,6 +33,7 @@ export default {
   getFinanceSettlement: '/api/finance/settlement/page', //财务结算
   getFinanceSettlementDetail: '/api/finance/settle/detail/page', //财务结算明细
   getFinanceBkge: '/api/finance/bkge/page', //佣金发放
+  getFinanceBkgeDetail: '/api/finance/bkge/detail/page',
   /* 系统 */
   getUserPage: '/api/user/page', //用户管理-查询
   getLogPage: '/api/log/page', //获取操作日志
