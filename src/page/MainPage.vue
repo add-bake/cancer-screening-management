@@ -8,6 +8,9 @@
         class="scroll-box"
       >
         <el-menu router :default-active="currentPage" ref="menu">
+          <el-submenu v-show="false" index="0">
+            <el-menu-item index="/">· 首页</el-menu-item>
+          </el-submenu>
           <el-submenu index="1">
             <template slot="title"><i class="menu-icon icon01"></i>预约</template>
             <el-menu-item-group>
@@ -98,6 +101,14 @@ export default {
       this.clientHeight = `${document.documentElement.clientHeight}`
     }
   },
+  watch: {
+    '$route' (route) {
+      this.$nextTick(() => this.$refs.menu.updateActiveIndex(route.path))
+      // if (['/', '/user/index'].includes(route.path)) {
+      //   this.menuClose()
+      // }
+    }
+  },
   methods:{
     changeFixed(clientHeight){
       this.$refs.mainPage.style.height = clientHeight+'px';
@@ -113,11 +124,9 @@ export default {
       })
     },
     toIndex() {
-      this.menuClose()
       this.$router.push({path: '/'})
     },
     toUserIndex(){
-      this.menuClose()
       this.$router.push({path: '/user/index'})
     },
     menuClose() {
