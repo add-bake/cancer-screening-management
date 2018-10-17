@@ -37,4 +37,6 @@ export default {
   /* 系统 */
   getUserPage: '/api/user/page', //用户管理-查询
   getLogPage: '/api/log/page', //获取操作日志
+  getUserInfo: '/api/sys/user/get', //加载账户信息
+  updateUserInfo: '/api/sys/user/update', //账户设置-修改提交
 }
