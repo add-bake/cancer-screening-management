@@ -1,7 +1,7 @@
 <template>
   <el-container class="main-page" ref="mainPage" :style="{height: clientHeight+'px'}">
     <el-aside class="menu" style="width: 220px;">
-      <p class="system-name l" @click="$router.push('/')">健康天眼管理系统</p>
+      <p class="system-name l" @click="toIndex">健康天眼管理系统</p>
       <el-scrollbar
         :native="false"
         view-class="view-box"
@@ -112,11 +112,18 @@ export default {
         this.$router.replace('/login')
       })
     },
+    toIndex() {
+      this.menuClose()
+      this.$router.push({path: '/'})
+    },
     toUserIndex(){
-      // console.log(this.$refs.menu)
-      // for(i=0;i<){}
-      // this.$refs.menu.close('1')
+      this.menuClose()
       this.$router.push({path: '/user/index'})
+    },
+    menuClose() {
+      Object.keys(this.$refs.menu.submenus).map(item => {
+        this.$refs.menu.close(item)
+      })
     }
   }
 }
