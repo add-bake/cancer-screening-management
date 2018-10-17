@@ -53,7 +53,12 @@ export default {
       (response) => {
         return checkStatus(response)
       }
-    )
+    ).catch(err => {
+      Message({
+        message: err.data.msg,
+        type: 'warning'
+      })
+    })
   },
   get (url, params) {
     return axios({
