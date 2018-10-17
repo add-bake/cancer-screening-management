@@ -314,12 +314,18 @@ table {
   text-decoration: underline;
 }
 
+/* [hack] push dialog to the right main area of the system */
+.el-dialog__wrapper {
+  padding-left: 220px;
+}
+
 /* 字体 */
 @font-face {
   font-family: "Univers LT 59 Ultra Condensed";
   src: url('../assets/font/number.ttf');
 }
 
+/* animate */
 .fade-enter, .fade-leave-to {
   opacity: 0;
 }
