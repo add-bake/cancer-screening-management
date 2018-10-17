@@ -65,7 +65,7 @@ export default {
       session('role', res.data.role)
       session('username', this.form.username)
       session('logintime', res.data.loginTime)
-      this.$router.replace(this.$route.query.redirect || '/')
+      this.$router.replace(this.$route.query.redirect ? window.decodeURI(this.$route.query.redirect) : '/')
     }
   }
 }

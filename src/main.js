@@ -35,6 +35,8 @@ Vue.prototype.$ctloading = (callback) => {
   })
   callback().then(() => {
     instance.close()
+  }, (err) => {
+    instance.close()
   })
 }
 Vue.config.productionTip = false

@@ -13,8 +13,10 @@ axios.interceptors.request.use(config => {
 })
 
 function redirectToLogin () {
+  if (!session('token')) {
+    router.replace({path: '/login', query: {redirect: window.encodeURI(window.location.hash.slice(1))}})
+  }
   session('token','')
-  router.replace({path: '/login', query: {redirect: window.location.hash.slice(1)}})
 }
 
 axios.interceptors.response.use(response => {
@@ -25,6 +27,7 @@ axios.interceptors.response.use(response => {
   if (token) session('token', token)
   return response
 }, error => {
+  if (error.response && error.response.status === 403) redirectToLogin()
   return Promise.reject(error.response)
 })
 

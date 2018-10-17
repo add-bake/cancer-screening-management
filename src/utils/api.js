@@ -35,4 +35,5 @@ export default {
   getFinanceBkge: '/api/finance/bkge/page', //佣金发放
   /* 系统 */
   getUserPage: '/api/user/page', //用户管理-查询
+  getLogPage: '/api/log/page', //获取操作日志
 }

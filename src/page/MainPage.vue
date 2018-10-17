@@ -7,7 +7,7 @@
         view-class="view-box"
         class="scroll-box"
       >
-        <el-menu router :default-active="currentPage">
+        <el-menu router :default-active="currentPage" ref="menu">
           <el-submenu index="1">
             <template slot="title"><i class="menu-icon icon01"></i>预约</template>
             <el-menu-item-group>
@@ -56,7 +56,9 @@
             <button class="btn-message"></button>
           </el-badge> -->
           <p class="info l">欢迎您，{{username}}</p>
-          <!-- <img class="head l" src="https://via.placeholder.com/100x100" alt=""> -->
+          <button class="head l" @click="toUserIndex">
+            <icon-svg icon-class="head"></icon-svg>
+          </button>
           <button class="btn-logout l" @click="logout"></button>
         </div>
       </el-header>
@@ -109,6 +111,12 @@ export default {
         session('token', null)
         this.$router.replace('/login')
       })
+    },
+    toUserIndex(){
+      // console.log(this.$refs.menu)
+      // for(i=0;i<){}
+      // this.$refs.menu.close('1')
+      this.$router.push({path: '/user/index'})
     }
   }
 }
@@ -226,6 +234,10 @@ export default {
         height: 36px;
         margin: 12px 22px;
         border-radius: 50%;
+        svg {
+          width: 100%;
+          height: 100%;
+        }
       }
     }
   }
