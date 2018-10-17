@@ -251,6 +251,7 @@ export default {
   }
   .form-box {
     width: 300px;
+    margin-top: 10px;
   }
 }
 </style>
