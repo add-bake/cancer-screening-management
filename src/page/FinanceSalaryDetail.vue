@@ -48,7 +48,7 @@
           </el-table-column>
           <el-table-column
             prop="orgName"
-            label="体检机构">
+            label="合作机构">
           </el-table-column>
           <el-table-column
             prop="amount"
