@@ -35,10 +35,6 @@
         style="width: 100%"
       >
         <el-table-column
-          fixed
-          type="selection"
-        ></el-table-column>
-        <el-table-column
           prop="orgName"
           label="合作机构">
         </el-table-column>

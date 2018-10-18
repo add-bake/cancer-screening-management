@@ -37,10 +37,6 @@
           v-loading="loading"
           style="width: 100%"
         >
-          <!-- <el-table-column
-            fixed
-            type="selection"
-          ></el-table-column> -->
           <el-table-column
             prop="name"
             label="体检者姓名"

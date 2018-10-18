@@ -27,7 +27,7 @@ axios.interceptors.response.use(response => {
   if (token) session('token', token)
   return response
 }, error => {
-  if (error.response && error.response.status === 403) redirectToLogin()
+  if (error.response && error.response.status === 403 || error.response.status === 500) redirectToLogin()
   return Promise.reject(error.response)
 })
 

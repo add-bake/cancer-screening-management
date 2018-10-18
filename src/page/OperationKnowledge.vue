@@ -26,11 +26,6 @@
         v-loading="loading"
         style="width: 100%">
         <el-table-column
-          fixed
-          type="selection"
-          width="55">
-        </el-table-column>
-        <el-table-column
           prop="title"
           label="标题">
         </el-table-column>

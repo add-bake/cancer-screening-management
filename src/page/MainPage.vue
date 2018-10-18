@@ -14,7 +14,6 @@
           <el-submenu index="1">
             <template slot="title"><i class="menu-icon icon01"></i>预约</template>
             <el-menu-item-group>
-              <!-- <template slot="title">分组一</template> -->
               <el-menu-item index="/booking/management">· 预约管理</el-menu-item>
               <el-menu-item index="/booking/report">· 体检报告</el-menu-item>
             </el-menu-item-group>
