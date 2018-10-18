@@ -63,7 +63,7 @@
           ></el-table-column>
           <el-table-column
             prop="bkgeLevel"
-            label="分佣类型"
+            label="分佣来源"
             :formatter="bkgeType"
           ></el-table-column>
           <el-table-column
