@@ -1,5 +1,5 @@
 import axios from 'axios'
-import { Message } from 'element-ui'
+import { Message , Loading } from 'element-ui'
 import session from '../utils/session'
 import router from '../router/index.js'
 
@@ -68,6 +68,52 @@ export default {
     }).then(
       (response) => {
         return checkStatus(response)
+      }
+    )
+  },
+  download (url, params, filename) {
+    const instance = Loading.service({
+      lock: true,
+      // text: '加载中...',
+      spinner: 'el-icon-loading',
+      background: 'rgba(255, 255, 255, 0.7)'
+    })
+    return axios({
+      method: 'get',
+      url,
+      params, // get 请求时带的参数
+      responseType: 'blob'
+    }).then(
+      (response) => {
+        if (!response) {
+          return
+        }
+        let disposition = response.headers['content-disposition']
+        let blob = new Blob([response.data], {type: response.headers['content-type']})
+        let url = window.URL.createObjectURL(blob)
+        let link = document.createElement('a')
+
+        link.style.display = 'none'
+        link.href = url
+        if(disposition){
+          let start = disposition.indexOf('filename')+10
+          let end = disposition.length-1
+          link.setAttribute('download',window.decodeURI(disposition.substring(start,end)))
+          document.body.appendChild(link)
+          link.click()
+        } else {
+          if(filename){
+            link.setAttribute('download',filename)
+            document.body.appendChild(link)
+            link.click()
+          } else {
+            Message({
+              message: '未获取到文件名称',
+              type: 'warning'
+            })
+          }
+        }
+        instance.close()
       }
     )
   }

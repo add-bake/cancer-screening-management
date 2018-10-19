@@ -3,8 +3,10 @@ export default {
   getCodeImg: '/auth/imgPath',
   getBookingOrder: '/api/check/order/page', //分页查询预约信息
   getBookingOrderDetail: '/api/check/order', //查看体检预约详情
+  exportCheckOrder: '/report/check/order/export', //预约信息导出
   getMedicalReport: '/api/check/presentation/page', //分页查询体检报告
   getMedicalReportDetail: '/api/check/presentation', //查看体检报告详情
+  exportCheckPresentation: '/report/presentation/export', //体检报告导出
   uploadSingle: '/api/upload/single', //单文件上传
   reportCommit: '/api/check/presentation/commit', //体检报告提交
   getOperationProject: '/api/project/page', //分页查询体检项目列表
@@ -34,9 +36,16 @@ export default {
   getFinanceSettlementDetail: '/api/finance/settle/detail/page', //财务结算明细
   getFinanceBkge: '/api/finance/bkge/page', //佣金发放
   getFinanceBkgeDetail: '/api/finance/bkge/detail/page',
+  exportFinanceSettlement: '/report/settlement/export', //财务结算导出
+  exportBkgeDetail: '/report/bkge/detail/export', //佣金发放明细导出
+  exportSettleDetail: '/report/settle/detail/export', //结算明细导出
+  exportFinanceBkge: '/report/bkge/export', //佣金发放管理导出
   /* 系统 */
   getUserPage: '/api/user/page', //用户管理-查询
   getLogPage: '/api/log/page', //获取操作日志
   getUserInfo: '/api/sys/user/get', //加载账户信息
   updateUserInfo: '/api/sys/user/update', //账户设置-修改提交
+  /* 首页 */
+  getDateRangeDict: '/api/home/get/dict', //首页获取时间段
+  getHomeOrder: '/api/home/get/order', //首页获取每日预约信息
 }

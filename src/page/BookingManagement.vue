@@ -7,7 +7,7 @@
     </el-breadcrumb>
     <div class="screen-box">
       <div class="title-bar">筛选查询</div>
-      <el-form size="small" :inline="true" :model="screenData" class="demo-form-inline">
+      <el-form size="small" :inline="true" :model="screenData" class="demo-form-inline" @keydown.native.enter="screenSubmit">
         <el-form-item label="姓名：">
           <el-input v-model="screenData.userName" placeholder="姓名"></el-input>
         </el-form-item>
@@ -22,7 +22,7 @@
     <div class="table-box">
       <div class="title-bar fix">
         数据列表
-        <el-button class="r">导出信息</el-button>
+        <el-button class="r" @click="exportData">导出信息</el-button>
       </div>
       <el-table
         :data="tableData"
@@ -158,7 +158,7 @@ export default {
     return {
       screenData: {
         userName: '',
-        region: '',
+        shareName: '',
       },
       page: {
         pageSize: 10,
@@ -209,6 +209,9 @@ export default {
     handleCurrentChange(arg) {
       this.page.pageNum = arg
       this.getData()
+    },
+    exportData() {
+      http.download(`${api.exportCheckOrder}`,this.screenData)
     }
   }
 }

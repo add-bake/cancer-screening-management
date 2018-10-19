@@ -1,7 +1,7 @@
 <template>
   <el-container class="main-page" ref="mainPage" :style="{height: clientHeight+'px'}">
     <el-aside class="menu" style="width: 220px;">
-      <p class="system-name l" @click="toIndex">健康天眼管理系统</p>
+      <router-link tag="p" class="system-name l" :to="{path: '/'}">健康天眼管理系统</router-link>
       <el-scrollbar
         :native="false"
         view-class="view-box"
@@ -10,6 +10,7 @@
         <el-menu router :default-active="currentPage" ref="menu">
           <el-submenu v-show="false" index="0">
             <el-menu-item index="/">· 首页</el-menu-item>
+            <el-menu-item index="/user/index">· 账户管理</el-menu-item>
           </el-submenu>
           <el-submenu index="1">
             <template slot="title"><i class="menu-icon icon01"></i>预约</template>
@@ -58,9 +59,9 @@
             <button class="btn-message"></button>
           </el-badge> -->
           <p class="info l">欢迎您，{{username}}</p>
-          <button class="head l" @click="toUserIndex">
+          <router-link tag="button" class="head l" :to="{path: '/user/index'}">
             <icon-svg icon-class="head"></icon-svg>
-          </button>
+          </router-link>
           <button class="btn-logout l" @click="logout"></button>
         </div>
       </el-header>
@@ -103,9 +104,6 @@ export default {
   watch: {
     '$route' (route) {
       this.$nextTick(() => this.$refs.menu.updateActiveIndex(route.path))
-      // if (['/', '/user/index'].includes(route.path)) {
-      //   this.menuClose()
-      // }
     }
   },
   methods:{
@@ -120,17 +118,6 @@ export default {
       }).then(() => {
         session('token', null)
         this.$router.replace('/login')
-      })
-    },
-    toIndex() {
-      this.$router.push({path: '/'})
-    },
-    toUserIndex(){
-      this.$router.push({path: '/user/index'})
-    },
-    menuClose() {
-      Object.keys(this.$refs.menu.submenus).map(item => {
-        this.$refs.menu.close(item)
       })
     }
   }

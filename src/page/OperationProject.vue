@@ -7,7 +7,7 @@
     </el-breadcrumb>
     <div class="screen-box">
       <div class="title-bar">筛选查询</div>
-      <el-form size="small" :inline="true" :model="screenData" class="demo-form-inline" @submit.native.prevent>
+      <el-form size="small" :inline="true" :model="screenData" class="demo-form-inline" @submit.native.prevent @keydown.native.enter="screenSubmit">
         <el-form-item label="项目名称：">
           <el-input v-model="screenData.projectName" placeholder="项目名称"></el-input>
         </el-form-item>

@@ -7,7 +7,7 @@
     </el-breadcrumb>
     <div class="screen-box">
       <div class="title-bar">筛选查询</div>
-      <el-form size="small" :inline="true" :model="screenData" class="demo-form-inline" ref="screenForm" :rules="rules">
+      <el-form size="small" :inline="true" :model="screenData" class="demo-form-inline" ref="screenForm" @keydown.native.enter="screenSubmit">
         <el-form-item label="姓名：" prop="userName">
           <el-input type="text" v-model="screenData.userName" placeholder="姓名" autocomplete="off"></el-input>
         </el-form-item>
@@ -19,7 +19,7 @@
     <div class="table-box">
       <div class="title-bar fix">
         数据列表
-        <el-button class="r">导出信息</el-button>
+        <el-button class="r" @click="exportData">导出信息</el-button>
       </div>
       <el-table :data="tableData" v-loading="loading" style="width: 100%">
         <el-table-column
@@ -143,18 +143,6 @@ export default {
     this.getData();
   },
   data() {
-    let checkPhone = (rule, value, callback) => {
-      if (value) {
-        const reg = /^1[3|4|5|7|8][0-9]\d{8}$/;
-        if (reg.test(value)) {
-          callback();
-        } else {
-          return callback(new Error("请输入正确的手机号"));
-        }
-      } else {
-        callback();
-      }
-    };
     return {
       screenData: {
         userName: ""
@@ -169,9 +157,6 @@ export default {
       loading: false,
       customDialogVisible: false,
       detailData: {},
-      rules: {
-        phone: [{ validator: checkPhone, trigger: "blur" }]
-      },
       fileList: [],
       healthCheckOrderId: "",
       uploadState: "",
@@ -285,6 +270,9 @@ export default {
     handleCurrentChange(arg) {
       this.page.pageNum = arg;
       this.getData();
+    },
+    exportData() {
+      http.download(`${api.exportCheckPresentation}`,this.screenData)
     }
   }
 };

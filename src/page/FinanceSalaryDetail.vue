@@ -30,7 +30,7 @@
       <div class="table-box">
         <div class="title-bar fix">
           数据列表
-          <el-button class="r">导出信息</el-button>
+          <el-button class="r" @click="exportData">导出信息</el-button>
         </div>
         <el-table
           :data="tableData"
@@ -180,6 +180,9 @@ export default {
     handleCurrentChange(arg) {
       this.page.pageNum = arg
       this.getData()
+    },
+    exportData() {
+      http.download(`${api.exportBkgeDetail}`,this.screenData)
     }
   }
 }

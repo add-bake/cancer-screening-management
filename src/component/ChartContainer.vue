@@ -2,6 +2,9 @@
   <div class="wrapper">
     <div class="title">
       {{title}}
+      <div class="title-operation r">
+        <slot name="titleOperation"></slot>
+      </div>
     </div>
     <div class="wrap-chart">
       <slot></slot>
@@ -46,6 +49,9 @@ export default {
   height: 40px;
   width: 6px;
   background-color: #00a398;
+}
+.title-operation {
+  margin-right: 40px;
 }
 .wrap-chart {
   padding: 20px;
