@@ -61,11 +61,16 @@ export default {
         imgCode: this.form.verifycode
       })
       this.logining = false
-      if (res.code !== 0) return this.$message({message: res.msg, type: 'error'})
-      session('role', res.data.role)
-      session('username', this.form.username)
-      session('logintime', res.data.loginTime)
-      this.$router.replace(this.$route.query.redirect ? window.decodeURI(this.$route.query.redirect) : '/')
+      if (res.code !== 0) {
+        this.$message({message: res.msg, type: 'error'})
+        this.getCodeImg()
+      } else {
+        session('role', res.data.role)
+        session('username', this.form.username)
+        session('logintime', res.data.loginTime)
+        this.$router.replace(this.$route.query.redirect ? window.decodeURI(this.$route.query.redirect) : '/')
+      }
+      
     }
   }
 }
