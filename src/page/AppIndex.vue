@@ -25,7 +25,6 @@
         :data="tableData"
         v-loading="loading"
         style="width: 100%"
-        @cell-click="handleBookNumberClick"
       >
         <el-table-column
           prop="date"
@@ -37,7 +36,7 @@
           v-for="item in dateRangeDict"
           :key="item.dictItemId"
         >
-          <el-button type="text" slot-scope="{row, column}">{{row[column.property]}}</el-button>
+          <el-button @click="handleBookNumberClick(row, column)" type="text" slot-scope="{row, column}">{{row[column.property]}}</el-button>
         </el-table-column>
       </el-table>
     </ChartContainer>
@@ -126,7 +125,7 @@ export default {
     }
   },
   methods: {
-    handleBookNumberClick (row, column, cell) {
+    handleBookNumberClick (row, column) {
       this.$router.push('/booking/management')
     },
     async getDateRangeDict () {
