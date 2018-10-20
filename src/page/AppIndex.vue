@@ -1,51 +1,49 @@
 <template>
-  <transition appear name="fade">
-    <div class="booking-management">
-      <div class="wrap-icons">
-        <IconNumber color="#09befe" icon="index-top-1" :number="numbers.one" desc="10天内推广数"></IconNumber>
-        <IconNumber color="#a18dd0" icon="index-top-2" :number="numbers.two" desc="10天内预约数"></IconNumber>
-        <IconNumber color="#e5a43d" icon="index-top-3" :number="numbers.three" desc="未完成体检数"></IconNumber>
-        <IconNumber color="#f56c6c" icon="index-top-4" :number="numbers.four" desc="30天内日均体检数"></IconNumber>
-      </div>
-
-      <ChartContainer style="margin-top: 20px;" title="每天预约信息">
-        <el-date-picker
-          v-model="dateRange"
-          type="daterange"
-          align="right"
-          unlink-panels
-          range-separator="至"
-          start-placeholder="开始日期"
-          end-placeholder="结束日期"
-          :start-placeholder="sTime"
-          :end-placeholder="eTime"
-          :picker-options="pickerOptions"
-          slot="titleOperation">
-        </el-date-picker>
-        <el-table
-          cell-class-name="link-cell"
-          :data="tableData"
-          v-loading="loading"
-          style="width: 100%"
-          @cell-click="handleBookNumberClick"
-        >
-          <el-table-column
-            prop="date"
-            label="日期"
-          ></el-table-column>
-          <el-table-column
-            :prop="item.dictItemCode"
-            :label="item.dictItemName"
-            v-for="item in dateRangeDict"
-            :key="item.dictItemId"
-          >
-          </el-table-column>
-        </el-table>
-      </ChartContainer>
-
-      <div class="footer">本平台由烟台海涛网络科技有限公司研制开发&nbsp;&nbsp;&nbsp;&nbsp;网址：www.haitao-tech.com&nbsp;&nbsp;&nbsp;&nbsp;咨询电话：0535-3942067</div>
+  <div class="booking-management">
+    <div class="wrap-icons">
+      <IconNumber color="#09befe" icon="index-top-1" :number="numbers.one" desc="10天内推广数"></IconNumber>
+      <IconNumber color="#a18dd0" icon="index-top-2" :number="numbers.two" desc="10天内预约数"></IconNumber>
+      <IconNumber color="#e5a43d" icon="index-top-3" :number="numbers.three" desc="未完成体检数"></IconNumber>
+      <IconNumber color="#f56c6c" icon="index-top-4" :number="numbers.four" desc="30天内日均体检数"></IconNumber>
     </div>
-  </transition>
+
+    <ChartContainer style="margin-top: 20px;" title="每天预约信息">
+      <el-date-picker
+        v-model="dateRange"
+        type="daterange"
+        align="right"
+        unlink-panels
+        range-separator="至"
+        start-placeholder="开始日期"
+        end-placeholder="结束日期"
+        :start-placeholder="sTime"
+        :end-placeholder="eTime"
+        :picker-options="pickerOptions"
+        slot="titleOperation">
+      </el-date-picker>
+      <el-table
+        :data="tableData"
+        v-loading="loading"
+        style="width: 100%"
+        @cell-click="handleBookNumberClick"
+      >
+        <el-table-column
+          prop="date"
+          label="日期"
+        ></el-table-column>
+        <el-table-column
+          :prop="item.dictItemCode"
+          :label="item.dictItemName"
+          v-for="item in dateRangeDict"
+          :key="item.dictItemId"
+        >
+          <el-button type="text" slot-scope="{row, column}">{{row[column.property]}}</el-button>
+        </el-table-column>
+      </el-table>
+    </ChartContainer>
+
+    <div class="footer">本平台由烟台海涛网络科技有限公司研制开发&nbsp;&nbsp;&nbsp;&nbsp;网址：www.haitao-tech.com&nbsp;&nbsp;&nbsp;&nbsp;咨询电话：0535-3942067</div>
+  </div>
 </template>
 
 <script>
@@ -129,7 +127,7 @@ export default {
   },
   methods: {
     handleBookNumberClick (row, column, cell) {
-      console.log('cell click')
+      this.$router.push('/booking/management')
     },
     async getDateRangeDict () {
       let res = await http.get(api.getDateRangeDict, {
@@ -184,9 +182,4 @@ export default {
 }
 </style>
 
-<style>
-/* .link-cell {
-  cursor: pointer;
-} */
-</style>
 

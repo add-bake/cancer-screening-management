@@ -63,7 +63,7 @@
         :total="totalPage">
       </el-pagination>
     </div>
-    <transition name="fade">
+    <transition appear name="fade" mode="out-in">
       <router-view class="detail-view"></router-view>
     </transition>
   </div>

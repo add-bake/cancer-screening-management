@@ -72,7 +72,9 @@
         class="main-box"
       >
         <el-main>
-          <router-view></router-view>
+          <transition appear name="fade" mode="out-in">
+            <router-view></router-view>
+          </transition>
         </el-main>
       </el-scrollbar>
     </el-container>
