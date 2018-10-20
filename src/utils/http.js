@@ -13,10 +13,11 @@ axios.interceptors.request.use(config => {
 })
 
 function redirectToLogin () {
-  if (!session('token')) {
+  session('token','')
+  let search = window.location.hash.split('?')[1]
+  if (!(search && search.startsWith('redirect'))) {
     router.replace({path: '/login', query: {redirect: window.encodeURI(window.location.hash.slice(1))}})
   }
-  session('token','')
 }
 
 axios.interceptors.response.use(response => {
@@ -27,8 +28,7 @@ axios.interceptors.response.use(response => {
   if (token) session('token', token)
   return response
 }, error => {
-  if (error.response && error.response.status === 403 || error.response.status === 500) redirectToLogin()
-  return Promise.reject(error.response)
+  if (error.response && (error.response.status === 403 || error.response.status === 500)) redirectToLogin()
 })
 
 let checkStatus = response => {
