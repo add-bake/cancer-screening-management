@@ -22,12 +22,23 @@
           :picker-options="pickerOptions"
           slot="titleOperation">
         </el-date-picker>
-        <el-table :data="tableData" v-loading="loading" style="width: 100%">
+        <el-table
+          cell-class-name="link-cell"
+          :data="tableData"
+          v-loading="loading"
+          style="width: 100%"
+          @cell-click="handleBookNumberClick"
+        >
           <el-table-column
-            :prop="index ? item.dictItemCode : 'date'"
+            prop="date"
+            label="日期"
+          ></el-table-column>
+          <el-table-column
+            :prop="item.dictItemCode"
             :label="item.dictItemName"
-            v-for="(item,index) in dateRangeDict"
-            :key="item.dictItemId">
+            v-for="item in dateRangeDict"
+            :key="item.dictItemId"
+          >
           </el-table-column>
         </el-table>
       </ChartContainer>
@@ -59,6 +70,7 @@ export default {
       four: 10
     }
     this.getDateRangeDict()
+    this.getData()
   },
   watch: {
     'dateRange'(val){
@@ -80,10 +92,7 @@ export default {
         three: 0,
         four: 0
       },
-      dateRangeDict: [{
-        seqNum: '',
-        dictItemName: '日期'
-      }],
+      dateRangeDict: [],
       sTime: dayjs().format('YYYY-MM-DD'),
       eTime: dayjs(new Date().getTime() + 3600 * 1000 * 24 * 7).format('YYYY-MM-DD'),
       tableData: [],
@@ -95,7 +104,7 @@ export default {
           onClick(picker) {
             const end = new Date();
             const start = new Date();
-            start.setTime(start.getTime() + 3600 * 1000 * 24 * 7);
+            end.setTime(start.getTime() + 3600 * 1000 * 24 * 7);
             picker.$emit('pick', [start, end]);
           }
         }, {
@@ -103,7 +112,7 @@ export default {
           onClick(picker) {
             const end = new Date();
             const start = new Date();
-            start.setTime(start.getTime() + 3600 * 1000 * 24 * 30);
+            end.setTime(start.getTime() + 3600 * 1000 * 24 * 30);
             picker.$emit('pick', [start, end]);
           }
         }, {
@@ -111,7 +120,7 @@ export default {
           onClick(picker) {
             const end = new Date();
             const start = new Date();
-            start.setTime(start.getTime() + 3600 * 1000 * 24 * 90);
+            end.setTime(start.getTime() + 3600 * 1000 * 24 * 90);
             picker.$emit('pick', [start, end]);
           }
         }]
@@ -119,21 +128,14 @@ export default {
     }
   },
   methods: {
+    handleBookNumberClick (row, column, cell) {
+      console.log('cell click')
+    },
     async getDateRangeDict () {
-      this.$ctloading(async () => {
-        let res = await http.get(api.getDateRangeDict, {
-          typeCode: 'APPOINTMENT_TIME'
-        })
-        if(res.code === 0){
-          res.data.map(item => {
-            this.dateRangeDict.push(item)
-          })
-          this.getData()
-        } else {
-          this.$message.warning("每日预约信息，获取时间段数据失败")
-        }
-      });
-      
+      let res = await http.get(api.getDateRangeDict, {
+        typeCode: 'APPOINTMENT_TIME'
+      })
+      this.dateRangeDict = res.data
     },
     async getData () {
       this.loading = true;
@@ -144,14 +146,14 @@ export default {
         }
       );
       this.loading = false;
-      this.tableData = []
-      if(Object.keys(res.data).length){
-        Object.keys(res.data).map((item,index) => {
-          let tableItem = Object.assign({
-            date: item
-          },res.data[item])
-          this.tableData.push(tableItem)
-        })
+      let dates = Object.keys(res.data)
+      if (dates.length) {
+        this.tableData = dates.map(date => ({
+          date,
+          ...res.data[date]
+        }))
+      } else {
+        this.tableData = []
       }
     }
   }
@@ -181,3 +183,10 @@ export default {
   right: -20px;
 }
 </style>
+
+<style>
+/* .link-cell {
+  cursor: pointer;
+} */
+</style>
+
