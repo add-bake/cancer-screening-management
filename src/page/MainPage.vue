@@ -23,7 +23,7 @@
             <template slot="title"><i class="menu-icon icon02"></i>运营</template>
             <el-menu-item-group>
               <!-- <template slot="title">分组一</template> -->
-              <el-menu-item index="/operation/project">· 体检项目</el-menu-item>
+              <!-- <el-menu-item index="/operation/project">· 体检项目</el-menu-item> -->
               <el-menu-item index="/operation/knowledge">· 健康知识</el-menu-item>
               <!-- <el-menu-item index="/operation/insurance">· 癌症保险</el-menu-item> -->
               <!-- <el-menu-item index="/operation/customer">· 客户管理</el-menu-item> -->
@@ -31,14 +31,14 @@
               <el-menu-item index="/operation/cooperation">· 合作机构</el-menu-item>
             </el-menu-item-group>
           </el-submenu>
-          <el-submenu index="3">
+          <!-- <el-submenu index="3">
             <template slot="title"><i class="menu-icon icon03"></i>财务</template>
             <el-menu-item-group>
               <el-menu-item index="/finance/settlement">· 财务结算</el-menu-item>
               <el-menu-item index="/finance/settlement_detail">· 结算明细</el-menu-item>
               <el-menu-item index="/finance/salary">· 佣金发放</el-menu-item>
             </el-menu-item-group>
-          </el-submenu>
+          </el-submenu> -->
           <el-submenu index="4">
             <template slot="title"><i class="menu-icon icon04"></i>系统</template>
             <el-menu-item-group>
